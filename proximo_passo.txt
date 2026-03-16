@@ -1,0 +1,476 @@
+Perfeito. Fechamos então:
+
+* **código da franqueadora:** `26000001`
+* fluxo de trabalho:
+
+  * eu te mando **o código completo**
+  * digo **exatamente em qual arquivo criar/alterar**
+  * você copia, testa e me manda o retorno
+  * eu ajusto o próximo passo em cima disso
+
+A ordem que vamos seguir para completar tudo será esta:
+
+# Fase 1 — Base de autenticação e usuários
+
+Essa é a fundação. Sem isso, o resto fica torto.
+
+## Passo 1
+
+**Refatorar autenticação para login por:**
+
+* `access_code`
+* `username`
+* `password`
+
+Inclui:
+
+* franqueadora usando `26000001`
+* franquias usando `franchise_code`
+
+## Passo 2
+
+**Refatorar model de usuários**
+Adicionar os campos do novo fluxo:
+
+* nome
+* sobrenome
+* CPF
+* data nascimento
+* sexo
+* e-mail
+* telefone
+* WhatsApp
+* cargo
+* foto
+* flags de primeiro acesso
+* troca obrigatória de senha
+* vínculo principal/secundário
+
+## Passo 3
+
+**Criar fluxo de primeiro login obrigatório**
+Usuário entra com senha provisória e é forçado a:
+
+* completar cadastro
+* trocar senha
+* só depois acessar o sistema
+
+## Passo 4
+
+**Ajustar frontend do login**
+Trocar tela e requisição para o novo padrão:
+
+* código
+* usuário
+* senha
+
+## Passo 5
+
+**Criar tela de completar cadastro**
+Tela obrigatória após primeiro login.
+
+---
+
+# Fase 2 — Perfis e permissões
+
+Depois da autenticação pronta, entramos nas regras de acesso.
+
+## Passo 6
+
+**Expandir perfis de acesso**
+Criar os perfis:
+
+* admin
+* gestor_franqueados
+* blog
+* marketing
+* suporte
+* franqueado_principal
+* franqueado_secundario
+
+## Passo 7
+
+**Ajustar middleware e guards**
+Cada perfil enxerga só o que pode.
+
+## Passo 8
+
+**Ajustar menu e navegação por perfil**
+Sidebar e páginas mudando conforme o acesso.
+
+---
+
+# Fase 3 — Franquias e usuários de franquia
+
+Aqui entra a gestão operacional.
+
+## Passo 9
+
+**Refatorar cadastro de franquias**
+Adicionar:
+
+* `franchise_code`
+* dados completos
+* status
+* rastreabilidade
+
+## Passo 10
+
+**Garantir 1 usuário principal por franquia**
+Regra de banco e regra de backend.
+
+## Passo 11
+
+**Criar gestão de usuários por franquia**
+
+* admin e gestor criam qualquer usuário
+* franqueado principal cria secundários da própria franquia
+
+---
+
+# Fase 4 — Soft delete e auditoria
+
+Antes de crescer os módulos, deixamos tudo seguro.
+
+## Passo 12
+
+**Aplicar soft delete global**
+Para:
+
+* usuários
+* franquias
+* documentos
+* marketing
+* treinamentos
+* blog
+* leads
+* tickets
+
+## Passo 13
+
+**Criar auditoria/rastreabilidade**
+Registrar:
+
+* criação
+* edição
+* exclusão lógica
+* restauração
+* login
+* uploads
+* downloads
+* mudanças de status
+
+## Passo 14
+
+**Criar área de lixeira do admin**
+Só admin vê excluídos e restaura.
+
+---
+
+# Fase 5 — Visual novo da área restrita
+
+Depois da base pronta, mudamos a cara do sistema.
+
+## Passo 15
+
+**Refazer layout logado no visual do site**
+
+* logo
+* cores
+* botões
+* header
+* cards
+
+## Passo 16
+
+**Criar sidebar recolhível**
+
+* desktop
+* mobile
+* padrão único do sistema
+
+## Passo 17
+
+**Padronizar componentes do painel**
+
+* tabelas
+* filtros
+* formulários
+* modais
+* botões
+* badges
+* cards
+
+---
+
+# Fase 6 — Leads de interessados em franquia
+
+Novo módulo comercial.
+
+## Passo 18
+
+**Criar módulo de leads**
+
+* receber interessados
+* listar
+* editar
+* mudar status
+* converter em franquia
+
+## Passo 19
+
+**Integrar formulário público do site com leads**
+Entradas do site caindo direto no painel.
+
+---
+
+# Fase 7 — Suporte em formato chat
+
+Transformar o suporte atual em algo real.
+
+## Passo 20
+
+**Refatorar tickets para fluxo de chat**
+
+* abertura do chamado
+* conversa contínua
+* histórico
+* fechamento
+
+## Passo 21
+
+**Criar anexos do suporte**
+
+* arquivos
+* imagens
+* vídeos
+* colar imagem
+
+## Passo 22
+
+**Identificar claramente cada mensagem**
+Mostrar:
+
+* nome
+* perfil
+* franquia
+* data/hora
+
+## Passo 23
+
+**Melhorar experiência visual do chat**
+Estilo conversa real.
+
+## Passo 24
+
+**Adicionar leitura/não lido e status**
+
+* aberto
+* em atendimento
+* aguardando
+* fechado
+
+---
+
+# Fase 8 — Marketing
+
+Biblioteca de materiais.
+
+## Passo 25
+
+**Criar categorias de marketing**
+
+* banners
+* posts
+* reels
+* vídeos TV
+* campanhas
+* outros
+
+## Passo 26
+
+**Criar upload e gestão dos materiais**
+
+* global
+* franquias específicas
+* download em qualidade total
+
+## Passo 27
+
+**Criar biblioteca visual de marketing**
+Com busca, filtro e preview.
+
+---
+
+# Fase 9 — Documentos
+
+Separado do marketing.
+
+## Passo 28
+
+**Refatorar módulo de documentos**
+
+* globais
+* exclusivos por franquia
+* download
+* consulta
+
+## Passo 29
+
+**Permitir ao suporte acessar todos os documentos**
+Inclusive globais e individuais.
+
+---
+
+# Fase 10 — Treinamentos
+
+Área nova completa.
+
+## Passo 30
+
+**Criar estrutura de treinamentos**
+
+* menus
+* submenus
+* conteúdos
+
+## Passo 31
+
+**Cadastrar conteúdos**
+
+* POPs
+* vídeos
+* PDFs
+* documentos
+* texto
+
+## Passo 32
+
+**Criar tela de consumo de treinamento**
+Para franqueados.
+
+---
+
+# Fase 11 — Blog administrativo forte
+
+Editor poderoso.
+
+## Passo 33
+
+**Criar módulo interno do blog**
+
+* rascunho
+* publicação
+* edição
+
+## Passo 34
+
+**Criar editor forte**
+Com suporte a:
+
+* texto
+* imagem
+* vídeo
+* diferentes orientações de mídia
+
+## Passo 35
+
+**Aplicar regra de layout da mídia**
+
+* deitada: topo full width
+* em pé: direita no desktop / topo no mobile
+
+---
+
+# Fase 12 — Dashboard e relatórios
+
+Fechamento da operação.
+
+## Passo 36
+
+**Refazer dashboards**
+Franqueadora:
+
+* leads
+* franquias
+* chamados
+* materiais
+* treinamentos
+
+Franquia:
+
+* documentos recentes
+* materiais recentes
+* chamados
+* treinamentos
+
+## Passo 37
+
+**Ajustar relatórios**
+Por perfil e por módulo.
+
+---
+
+# Fase 13 — Polimento final
+
+Finalização do sistema.
+
+## Passo 38
+
+**Busca global**
+
+* documentos
+* marketing
+* treinamentos
+* suporte
+
+## Passo 39
+
+**Notificações**
+
+* novo chamado
+* nova resposta
+* novo documento
+* novo material
+* novo treinamento
+
+## Passo 40
+
+**Revisão final de permissões, layout e fluxo**
+Fechar tudo sem ponta solta.
+
+---
+
+# Ordem real que eu vou te conduzir
+
+Na prática, eu vou te levar nesta sequência imediata:
+
+1. **autenticação nova**
+2. **model de usuário e franquia**
+3. **primeiro login obrigatório**
+4. **perfis**
+5. **layout novo da área restrita**
+6. **franquias e usuários**
+7. **soft delete + auditoria**
+8. **suporte chat**
+9. **marketing**
+10. **documentos**
+11. **treinamentos**
+12. **blog**
+13. **dashboard/relatórios**
+14. **acabamentos**
+
+# Próximo passo
+
+O primeiro bloco que vamos fazer é:
+
+**refatorar backend de autenticação e models de `users` e `franchises` para suportar `access_code + username + password` e o fluxo de primeiro login obrigatório.**
+
+No próximo eu já te mando o **Passo 1**, com:
+
+* arquivos exatos
+* código completo
+* o que criar e o que substituir.
+
+
+Paramos no passo 1 dia 15/03. Seguir com passo 2

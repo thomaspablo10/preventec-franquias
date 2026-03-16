@@ -1,0 +1,7 @@
+node_modules
+.next
+backend/__pycache__
+backend/app/__pycache__
+backend/alembic/__pycache__
+.git
+.gitignore
