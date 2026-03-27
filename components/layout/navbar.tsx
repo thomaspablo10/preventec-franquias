@@ -81,7 +81,13 @@ export function Navbar() {
               size="sm"
               className="border-primary text-primary hover:bg-primary hover:text-white"
             >
-              <Link href="/login">Login do Franqueado</Link>
+              <Link
+                href="https://dominio-do-sistema-contratado.com.br"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Acesso Restrito
+              </Link>
             </Button>
             <Button asChild size="sm" className="bg-[#d42b2b] hover:bg-[#b01e1e] text-white">
               <Link href="/contato">Quero ser franqueado</Link>

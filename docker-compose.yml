@@ -1,55 +1,34 @@
 services:
-  postgres:
-    image: postgres:17
-    container_name: preventec_postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: preventec_franquias
-      POSTGRES_USER: preventec_user
-      POSTGRES_PASSWORD: preventec_password
-    ports:
-      - "5432:5432"
-    volumes:
-      - preventec_postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U preventec_user -d preventec_franquias"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
-    container_name: preventec_backend
-    restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
-    ports:
-      - "8000:8000"
-    env_file:
-      - backend/.env
-    volumes:
-      - preventec_uploads_data:/app/uploads
-
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: preventec_frontend
     restart: unless-stopped
-    depends_on:
-      - backend
     ports:
-      - "3000:3000"
+      - "3003:3003"
     env_file:
       - .env.local
+    depends_on:
+      - postgres
     volumes:
       - ./:/app
       - /app/node_modules
       - /app/.next
+    command: sh -c "npm install && npx prisma generate && npm run dev -- --hostname 0.0.0.0 --port 3003"
+
+  postgres:
+    image: postgres:17
+    container_name: preventec_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: preventec_blog
+      POSTGRES_USER: preventec_user
+      POSTGRES_PASSWORD: preventec_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  preventec_postgres_data:
-  preventec_uploads_data:
+  postgres_data:

@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  REVIEWER
+}
+
+enum PostStatus {
+  DRAFT
+  APPROVAL
+  ADJUSTMENT
+  REJECTED
+  PUBLISHED
+}
+
+enum PostCategory {
+  MEDICINA_DO_TRABALHO
+  SEGURANCA_DO_TRABALHO
+  FINANCEIRO
+  TECNOLOGIA_DA_INFORMACAO
+  NOTICIAS_GERAIS
+}
+
+enum PostMediaType {
+  IMAGE
+  YOUTUBE
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String
+  email         String        @unique
+  passwordHash  String
+  role          UserRole
+  isActive      Boolean       @default(true)
+
+  publicName    String?
+  jobTitle      String?
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  createdPosts  Post[]        @relation("PostCreator")
+  reviewedPosts Post[]        @relation("PostReviewer")
+
+  sentMessages      PostMessage[] @relation("PostMessageSender")
+  receivedMessages  PostMessage[] @relation("PostMessageRecipient")
+}
+
+model Post {
+  id                    String        @id @default(cuid())
+  title                 String
+  slug                  String        @unique
+  excerpt               String?
+  content               String        @db.Text
+
+  status                PostStatus    @default(DRAFT)
+  category              PostCategory
+
+  mediaType             PostMediaType?
+  mediaUrl              String?
+
+  reviewNote            String?       @db.Text
+
+  creatorId             String
+  reviewerId            String?
+
+  publishedAuthorName   String?
+  publishedAuthorRole   String?
+
+  publishedAt           DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  creator               User          @relation("PostCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  reviewer              User?         @relation("PostReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  messages              PostMessage[]
+
+  @@index([creatorId])
+  @@index([reviewerId])
+  @@index([status])
+  @@index([slug])
+  @@index([category])
+}
+
+model PostMessage {
+  id           String    @id @default(cuid())
+  postId        String
+  senderId      String
+  recipientId   String
+  content       String    @db.Text
+  readAt        DateTime?
+  createdAt     DateTime  @default(now())
+
+  post          Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  sender        User      @relation("PostMessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient     User      @relation("PostMessageRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([recipientId])
+  @@index([senderId])
+  @@index([readAt])
+}

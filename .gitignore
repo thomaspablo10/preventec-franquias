@@ -17,3 +17,5 @@ dist
 build
 Dockerfile.local
 *.log
+Dockerfile
+docker-compose.yml

@@ -1,117 +1,81 @@
-import { apiRequest } from "./api";
+import { SignJWT, jwtVerify } from "jose";
+import { cookies } from "next/headers";
 
-export type UserRole = "admin" | "franchisee";
-
-export type AuthUser = {
-  id: number;
-  access_code: string;
-  username: string;
-  full_name: string;
-  first_name: string | null;
-  last_name: string | null;
-  email: string | null;
-  cpf: string | null;
-  birth_date: string | null;
-  gender: string | null;
-  phone: string | null;
-  whatsapp: string | null;
-  job_title: string | null;
-  profile_photo_path: string | null;
-  role: UserRole;
-  franchise_id: number | null;
-  is_primary: boolean;
-  first_login_completed: boolean;
-  must_change_password: boolean;
-  must_complete_profile: boolean;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
+export type SessionPayload = {
+  userId: string;
+  email: string;
+  role: "ADMIN" | "EDITOR" | "REVIEWER";
+  name: string;
 };
 
-export type LoginResponse = {
-  access_token: string;
-  token_type: string;
-  profile_completion_required: boolean;
-  user: AuthUser;
-};
+const secretValue = process.env.JWT_SECRET;
 
-const TOKEN_KEY = "preventec_token";
-const USER_KEY = "preventec_user";
-
-export async function login(
-  accessCode: string,
-  username: string,
-  password: string
-): Promise<LoginResponse> {
-  const data = await apiRequest<LoginResponse>("/api/v1/auth/login", {
-    method: "POST",
-    body: JSON.stringify({
-      access_code: accessCode,
-      username,
-      password,
-    }),
-  });
-
-  if (typeof window !== "undefined") {
-    localStorage.setItem(TOKEN_KEY, data.access_token);
-    localStorage.setItem(USER_KEY, JSON.stringify(data.user));
-    document.cookie = `preventec_token=${data.access_token}; path=/; max-age=86400; samesite=lax`;
-    document.cookie = `preventec_role=${data.user.role}; path=/; max-age=86400; samesite=lax`;
-  }
-
-  return data;
+if (!secretValue) {
+  throw new Error("JWT_SECRET não definida no .env.local");
 }
 
-export async function getCurrentUser(): Promise<AuthUser | null> {
-  if (typeof window === "undefined") return null;
+const secret = new TextEncoder().encode(secretValue);
 
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (!token) return null;
+function isProduction() {
+  return process.env.NODE_ENV === "production";
+}
+
+export async function createSessionToken(payload: SessionPayload) {
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("7d")
+    .sign(secret);
+}
+
+export async function verifySessionToken(token: string) {
+  const { payload } = await jwtVerify(token, secret);
+  return payload as unknown as SessionPayload;
+}
+
+export async function setSessionCookie(token: string) {
+  const cookieStore = await cookies();
+
+  cookieStore.set("studio_session", token, {
+    httpOnly: true,
+    secure: isProduction(),
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7,
+  });
+}
+
+export async function clearSessionCookie() {
+  const cookieStore = await cookies();
+
+  cookieStore.set("studio_session", "", {
+    httpOnly: true,
+    secure: isProduction(),
+    sameSite: "lax",
+    path: "/",
+    expires: new Date(0),
+  });
+}
+
+export async function getSession() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("studio_session")?.value;
+
+  if (!token) {
+    return null;
+  }
 
   try {
-    const user = await apiRequest<AuthUser>("/api/v1/auth/me", {
-      method: "GET",
-      token,
+    return await verifySessionToken(token);
+  } catch {
+    cookieStore.set("studio_session", "", {
+      httpOnly: true,
+      secure: isProduction(),
+      sameSite: "lax",
+      path: "/",
+      expires: new Date(0),
     });
 
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
-    document.cookie = `preventec_role=${user.role}; path=/; max-age=86400; samesite=lax`;
-
-    return user;
-  } catch {
-    logout();
     return null;
   }
-}
-
-export function getStoredUser(): AuthUser | null {
-  if (typeof window === "undefined") return null;
-
-  const userRaw = localStorage.getItem(USER_KEY);
-  if (!userRaw) return null;
-
-  try {
-    return JSON.parse(userRaw) as AuthUser;
-  } catch {
-    return null;
-  }
-}
-
-export function getToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(TOKEN_KEY);
-}
-
-export function isAuthenticated(): boolean {
-  return !!getToken();
-}
-
-export function logout(): void {
-  if (typeof window === "undefined") return;
-
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USER_KEY);
-
-  document.cookie = "preventec_token=; path=/; max-age=0; samesite=lax";
-  document.cookie = "preventec_role=; path=/; max-age=0; samesite=lax";
 }

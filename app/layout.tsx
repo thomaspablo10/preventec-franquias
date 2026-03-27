@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
-import { AuthProvider } from "@/hooks/use-auth";
 import "./globals.css";
 
 const inter = Inter({
@@ -51,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        {children}
       </body>
     </html>
   );

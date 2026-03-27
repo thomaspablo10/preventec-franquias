@@ -457,20 +457,9 @@ Na prática, eu vou te levar nesta sequência imediata:
 10. **documentos**
 11. **treinamentos**
 12. **blog**
-13. **dashboard/relatórios**
-14. **acabamentos**
+13. **agendamentos**
+14. **reuniões**
+14. **dashboard/relatórios**
+15. **acabamentos**
 
-# Próximo passo
-
-O primeiro bloco que vamos fazer é:
-
-**refatorar backend de autenticação e models de `users` e `franchises` para suportar `access_code + username + password` e o fluxo de primeiro login obrigatório.**
-
-No próximo eu já te mando o **Passo 1**, com:
-
-* arquivos exatos
-* código completo
-* o que criar e o que substituir.
-
-
-Paramos no passo 1 dia 15/03. Seguir com passo 2
+Paramos no passo 7 dia 18/03. Seguir com passo 8

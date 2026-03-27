@@ -1,38 +1,68 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { jwtVerify } from "jose";
 
-export function middleware(request: NextRequest) {
+const secretValue = process.env.JWT_SECRET;
+
+if (!secretValue) {
+  throw new Error("JWT_SECRET não definida no ambiente.");
+}
+
+const secret = new TextEncoder().encode(secretValue);
+
+function isProduction() {
+  return process.env.NODE_ENV === "production";
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const token = request.cookies.get("studio_session")?.value;
 
-  const token = request.cookies.get('preventec_token')?.value;
-  const role = request.cookies.get('preventec_role')?.value;
-
-  const isLoginPage = pathname === '/login';
-  const isAdminRoute = pathname.startsWith('/admin');
-  const isPortalRoute = pathname.startsWith('/portal');
-
-  if ((isAdminRoute || isPortalRoute) && !token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  if (!pathname.startsWith("/studio")) {
+    return NextResponse.next();
   }
 
-  if (isAdminRoute && role && role !== 'admin') {
-    return NextResponse.redirect(new URL('/portal', request.url));
+  if (pathname === "/studio/login") {
+    if (!token) {
+      return NextResponse.next();
+    }
+
+    try {
+      await jwtVerify(token, secret);
+      return NextResponse.redirect(new URL("/studio/dashboard", request.url));
+    } catch {
+      const response = NextResponse.next();
+      response.cookies.set("studio_session", "", {
+        httpOnly: true,
+        secure: isProduction(),
+        sameSite: "lax",
+        path: "/",
+        expires: new Date(0),
+      });
+      return response;
+    }
   }
 
-  if (isPortalRoute && role && role !== 'franchisee') {
-    return NextResponse.redirect(new URL('/admin', request.url));
+  if (!token) {
+    return NextResponse.redirect(new URL("/studio/login", request.url));
   }
 
-  if (isLoginPage && token && role === 'admin') {
-    return NextResponse.redirect(new URL('/admin', request.url));
+  try {
+    await jwtVerify(token, secret);
+    return NextResponse.next();
+  } catch {
+    const response = NextResponse.redirect(new URL("/studio/login", request.url));
+    response.cookies.set("studio_session", "", {
+      httpOnly: true,
+      secure: isProduction(),
+      sameSite: "lax",
+      path: "/",
+      expires: new Date(0),
+    });
+    return response;
   }
-
-  if (isLoginPage && token && role === 'franchisee') {
-    return NextResponse.redirect(new URL('/portal', request.url));
-  }
-
-  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/login', '/admin/:path*', '/portal/:path*'],
+  matcher: ["/studio/:path*"],
 };
