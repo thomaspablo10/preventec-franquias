@@ -82,7 +82,7 @@ export function Navbar() {
               className="border-primary text-primary hover:bg-primary hover:text-white"
             >
               <Link
-                href="https://dominio-do-sistema-contratado.com.br"
+                href="https://app.centraldofranqueado.com.br"
                 target="_blank"
                 rel="noopener noreferrer"
               >
