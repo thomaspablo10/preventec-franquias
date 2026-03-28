@@ -8,6 +8,9 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3003
+RUN npx prisma generate
+RUN npm run build
 
-CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "3003"]
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]

@@ -7,7 +7,7 @@ export function FloatingButtons() {
     <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
       {/* WhatsApp */}
       <a
-        href="https://wa.me/5566984099138?text=Olá! Tenho interesse em ser franqueado Preventec."
+        href="https://wa.me/5566992025805?text=Olá! Tenho interesse em ser franqueado Preventec."
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 group"
@@ -23,7 +23,7 @@ export function FloatingButtons() {
         </div>
       </a>
 
-      {/* Phone */}
+      {/* Phone }
       <a
         href="tel:+556635311590"
         className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 group"
@@ -35,7 +35,7 @@ export function FloatingButtons() {
         <div className="w-14 h-14 flex items-center justify-center rounded-full">
           <Phone className="w-6 h-6" />
         </div>
-      </a>
+      </a>*/}
     </div>
   );
 }

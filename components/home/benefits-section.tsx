@@ -1,4 +1,5 @@
 import { TrendingUp, Award, Users, HeadphonesIcon, BookOpen, Shield } from "lucide-react";
+const experienceYears = new Date().getFullYear() - 1998
 
 const benefits = [
   {
@@ -19,7 +20,7 @@ const benefits = [
   {
     icon: BookOpen,
     title: "Know-how Completo",
-    description: "Acesso a processos, sistemas e metodologias desenvolvidos ao longo de mais de 15 anos.",
+    description: `Acesso a processos, sistemas e metodologias desenvolvidos ao longo de mais de ${experienceYears} anos.`,
   },
   {
     icon: Users,

@@ -7,7 +7,7 @@ const models = [
   {
     name: "Medicina do Trabalho",
     tag: "Modalidade 1",
-    description: "Ideal para iniciar no setor com foco em saúde ocupacional e gestão médica dos trabalhadores.",
+    description: "Ideal para iniciar no setor com foco em saúde ocupacional com exames complementares completos e gestão médica dos trabalhadores.",
     color: "border-blue-200 bg-blue-50",
     tagColor: "bg-blue-100 text-blue-700",
     services: [
@@ -15,6 +15,8 @@ const models = [
       "ASO (Atestado de Saúde Ocupacional)",
       "Gestão de saúde ocupacional",
       "Acompanhamento médico ocupacional",
+      "Realização de exames complementares",
+      "Coleta laboratorial",
     ],
   },
   {
@@ -28,28 +30,26 @@ const models = [
       "Tudo da Modalidade 1, mais:",
       "PGR (Programa de Gerenciamento de Riscos)",
       "LTCAT (Laudo Técnico das Condições Ambientais)",
+      "PGRSS (Programa de Gerenciamento de Resíduos Sólidos de Saúde",
       "Consultoria em segurança do trabalho",
       "Gestão de SST",
       "Programas obrigatórios NR",
     ],
   },
   {
-    name: "Medicina + Segurança + Exames",
+    name: "Medicina + Segurança + Diagnóstico por Imagem",
     tag: "Modalidade 3",
-    description: "A solução mais abrangente, com exames complementares completos e maior ticket médio.",
+    description: "A solução mais abrangente com módulo de diagnóstico por imagem ocupacional, ampliando a operação da unidade e elevando o ticket médio.",
     color: "border-red-200 bg-red-50",
     tagColor: "bg-red-100 text-red-700",
     services: [
       "Tudo da Modalidade 2, mais:",
-      "Coleta laboratorial",
-      "Acuidade visual",
-      "Raio-X ocupacional",
-      "Eletrocardiograma",
-      "Eletroencefalograma",
-      "Dinamometria palmar",
-      "Testes: Ishihara, Romberg, Epworth",
+      "Módulo de diagnóstico por imagem ocupacional",
+      "Estrutura para realização de raio-X ocupacional",
+      "Ampliação do portfólio de exames complementares",
+      "Maior potencial de faturamento",
     ],
-  },
+  }
 ];
 
 export function ModelsPreviewSection() {

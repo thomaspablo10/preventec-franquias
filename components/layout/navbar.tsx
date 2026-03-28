@@ -79,18 +79,18 @@ export function Navbar() {
               asChild
               variant="outline"
               size="sm"
-              className="border-primary text-primary hover:bg-primary hover:text-white"
+              className="bg-primary text-white hover:border-primary hover:text-primary"
             >
               <Link
                 href="https://app.centraldofranqueado.com.br"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Acesso Restrito
+                Central do Franqueado
               </Link>
             </Button>
-            <Button asChild size="sm" className="bg-[#d42b2b] hover:bg-[#b01e1e] text-white">
-              <Link href="/contato">Quero ser franqueado</Link>
+            <Button asChild size="sm" className="bg-[#d42b2b] text-white border border-transparent hover:bg-white hover:text-[#b01e1e] hover:border-[#b01e1e]">
+              <Link href="/contato">Quero ser Franqueado</Link>
             </Button>
           </div>
 
@@ -127,12 +127,18 @@ export function Navbar() {
               <Button
                 asChild
                 variant="outline"
-                className="w-full border-primary text-primary"
+                className="bg-primary text-white hover:border-primary hover:text-primary"
               >
-                <Link href="/login">Login do Franqueado</Link>
+                <Link
+                href="https://app.centraldofranqueado.com.br"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Central do Franqueado
+              </Link>
               </Button>
-              <Button asChild className="w-full bg-[#d42b2b] hover:bg-[#b01e1e] text-white">
-                <Link href="/contato">Quero ser franqueado</Link>
+              <Button asChild size="sm" className="bg-[#d42b2b] text-white border border-transparent hover:bg-white hover:text-[#b01e1e] hover:border-[#b01e1e]">
+                <Link href="/contato">Quero ser Franqueado</Link>
               </Button>
             </div>
           </nav>

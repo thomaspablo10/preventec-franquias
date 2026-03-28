@@ -58,7 +58,7 @@ export function HeroSection() {
               variant="outline"
               className="border-white/50 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm text-base h-14 px-8"
             >
-              <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">
+              <a href="https://wa.me/5566992025805" target="_blank" rel="noopener noreferrer">
                 <Phone className="w-5 h-5 mr-2" />
                 Falar com consultor
               </a>
@@ -66,7 +66,7 @@ export function HeroSection() {
           </div>
 
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-6 max-w-sm">
+          {/*<div className="mt-16 grid grid-cols-3 gap-6 max-w-sm">
             {[
               { value: "50+", label: "Unidades ativas" },
               { value: "15+", label: "Anos de mercado" },
@@ -77,7 +77,7 @@ export function HeroSection() {
                 <p className="text-sm text-white/60 mt-1">{stat.label}</p>
               </div>
             ))}
-          </div>
+          </div>*/}
         </div>
       </div>
     </section>

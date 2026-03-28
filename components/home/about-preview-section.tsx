@@ -3,11 +3,12 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const experienceYears = new Date().getFullYear() - 1998
+
 const differentials = [
   "Metodologia proprietária e processos auditados",
   "Sistema de gestão exclusivo para unidades",
   "Central de relacionamento com clientes",
-  "Jurídico especializado em normas trabalhistas",
   "Equipe de marketing e comunicação dedicada",
   "Atualização constante com mudanças na legislação",
 ];
@@ -28,7 +29,7 @@ export function AboutPreviewSection() {
             </div>
             {/* Floating badge */}
             <div className="absolute -bottom-6 -right-6 bg-primary text-white rounded-2xl p-6 shadow-xl hidden sm:block">
-              <p className="text-3xl font-bold">28+</p>
+              <p className="text-3xl font-bold">{`${experienceYears}`}+</p>
               <p className="text-sm text-white/80 mt-1">Anos de<br />experiência</p>
             </div>
           </div>

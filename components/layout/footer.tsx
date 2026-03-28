@@ -92,7 +92,7 @@ export function Footer() {
             </ul>
             <div className="mt-6">
               <a
-                href="https://wa.me/5511999999999"
+                href="https://wa.me/5566992025805"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
@@ -110,10 +110,6 @@ export function Footer() {
           <p className="text-white/50 text-sm">
             © {new Date().getFullYear()} Preventec Franquias. Todos os direitos reservados.
           </p>
-          <div className="flex items-center gap-6">
-            <Link href="#" className="text-white/50 hover:text-white/70 text-sm transition-colors">Política de Privacidade</Link>
-            <Link href="#" className="text-white/50 hover:text-white/70 text-sm transition-colors">Termos de Uso</Link>
-          </div>
         </div>
       </div>
     </footer>

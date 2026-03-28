@@ -16,6 +16,8 @@ const models = [
       { name: "ASO", desc: "Atestado de Saúde Ocupacional (admissional, periódico, demissional)" },
       { name: "Gestão de saúde ocupacional", desc: "Monitoramento e gestão dos indicadores de saúde da empresa" },
       { name: "Acompanhamento médico ocupacional", desc: "Consultas e avaliações periódicas com médico do trabalho" },
+      { name: "Exames Simples", desc: "Realização de Exame Clínico Ocupacional, Audiometria e Acuidade Visual"},
+      { name: "Exames Complementares", desc: "Realização de Eletrocardiograma, Eletroencéfalograma, Teste de Romberg, Espirometria, Dinanometria Palmar, entre outros"},
     ],
   },
   {
@@ -38,23 +40,33 @@ const models = [
   {
     id: "mod3",
     tag: "Modalidade 3",
-    name: "Medicina + Segurança + Exames",
-    description: "O portfólio mais completo da rede, com exames complementares que aumentam o ticket médio e a fidelização de clientes.",
-    color: "border-red-300",
+    name: "Medicina + Segurança + Diagnóstico por Imagem",
+    description: "A solução mais abrangente com módulo de diagnóstico por imagem ocupacional, ampliando a operação da unidade e elevando o ticket médio.",
+    color: "border-red-200 bg-red-50",
     headerColor: "bg-[#d42b2b]",
     services: [
-      { name: "Todos os serviços da Modalidade 2", desc: "Medicina do trabalho + Segurança do trabalho completa" },
-      { name: "Coleta laboratorial", desc: "Coleta e processamento de exames de sangue e outros fluidos" },
-      { name: "Acuidade visual", desc: "Exame de visão para NRs que exigem aptidão visual" },
-      { name: "Raio-X ocupacional", desc: "Radiografias para atividades com exposição a agentes físicos" },
-      { name: "Eletrocardiograma (ECG)", desc: "Avaliação cardíaca para funções de maior exigência física" },
-      { name: "Eletroencefalograma (EEG)", desc: "Avaliação neurológica para funções que exigem atenção plena" },
-      { name: "Dinamometria palmar", desc: "Avaliação de força de preensão manual" },
-      { name: "Teste de Ishihara", desc: "Avaliação de visão de cores (daltonismo)" },
-      { name: "Teste de Romberg", desc: "Avaliação de equilíbrio e coordenação motora" },
-      { name: "Escala de Epworth", desc: "Avaliação de sonolência diurna para motoristas e operadores" },
+      { 
+        name: "Tudo da Modalidade 2, mais:", 
+        desc: "Todos os serviços completos de medicina e segurança do trabalho já inclusos" 
+      },
+      { 
+        name: "Módulo de diagnóstico por imagem ocupacional", 
+        desc: "Inclusão do raio-X ocupacional como estrutura adicional da unidade" 
+      },
+      { 
+        name: "Estrutura para realização de raio-X ocupacional", 
+        desc: "Permite executar exames de imagem diretamente na unidade" 
+      },
+      { 
+        name: "Ampliação do portfólio de exames complementares", 
+        desc: "Aumenta a capacidade de atendimento e diversidade de serviços" 
+      },
+      { 
+        name: "Maior potencial de faturamento", 
+        desc: "Eleva o ticket médio e a receita por cliente atendido" 
+      },
     ],
-  },
+  }
 ];
 
 export default function ModalidadesPage() {
