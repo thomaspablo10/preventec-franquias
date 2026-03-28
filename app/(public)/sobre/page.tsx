@@ -4,18 +4,17 @@ import { ArrowRight, Target, Globe, Heart, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const values = [
-  { icon: Target, title: "Missão", text: "Expandir o acesso à saúde e segurança ocupacional de qualidade por todo o Brasil através de uma rede de franquias especializada." },
-  { icon: Globe, title: "Visão", text: "Ser a maior e mais reconhecida rede de franquias em Medicina e Segurança do Trabalho do Brasil até 2030." },
-  { icon: Heart, title: "Valores", text: "Excelência técnica, ética, compromisso com o cliente e responsabilidade com a saúde dos trabalhadores brasileiros." },
-  { icon: Zap, title: "Inovação", text: "Aplicamos tecnologia e processos modernos para oferecer serviços mais eficientes, precisos e acessíveis." },
+  { icon: Target, title: "Missão", text: "Promover a saúde e a segurança dos trabalhadores por meio de serviços padronizados, com foco na prevenção e no cumprimento da legislação." },
+  { icon: Globe, title: "Visão", text: "Ser referência nacional como rede de franquias em Medicina e Segurança do Trabalho, reconhecida pela qualidade, confiabilidade e inovação." },
+  { icon: Heart, title: "Valores", text: "Ética, responsabilidade, excelência técnica, padronização dos serviços, foco na prevenção, compromisso com o cliente e valorização das pessoas." },
 ];
 
-const stats = [
+{/*const stats = [
   { value: "50+", label: "Unidades ativas" },
   { value: "15+", label: "Anos de expertise" },
   { value: "10k+", label: "Empresas atendidas" },
   { value: "98%", label: "Satisfação dos clientes" },
-];
+];*/}
 
 export default function SobrePage() {
   return (
@@ -69,7 +68,7 @@ export default function SobrePage() {
             </div>
           </div>
 
-          {/* Stats */}
+          {/* Stats }
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
             {stats.map((stat) => (
               <div key={stat.label} className="bg-muted/40 rounded-2xl p-8 text-center">
@@ -77,7 +76,7 @@ export default function SobrePage() {
                 <p className="text-muted-foreground text-sm">{stat.label}</p>
               </div>
             ))}
-          </div>
+          </div>*/}
 
           {/* Values */}
           <div className="text-center mb-12">
@@ -85,7 +84,7 @@ export default function SobrePage() {
               Nossos valores e propósito
             </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {values.map((value) => {
               const Icon = value.icon;
               return (

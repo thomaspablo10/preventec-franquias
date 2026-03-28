@@ -139,7 +139,7 @@ export default function ComoFuncionaPage() {
               },
               {
                 q: "Em quanto tempo começo a ter retorno?",
-                a: "O tempo médio de retorno do investimento entre nossos franqueados é de 18 a 24 meses, dependendo da modalidade e do mercado local.",
+                a: "O tempo médio de retorno do investimento entre nossos franqueados é de 10 a 18 meses, dependendo da modalidade e do mercado local.",
               },
               {
                 q: "A Preventec ajuda na busca de clientes?",

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Shield, Phone, Mail, MapPin, Instagram, Linkedin, Facebook } from "lucide-react";
+import { Shield, Phone, Mail, MapPin, Instagram, Facebook } from "lucide-react";
 
 export function Footer() {
   return (
@@ -9,9 +9,11 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/10">
-                <Shield className="w-5 h-5 text-white" />
-              </div>
+              <img
+                src="/images/logo-square.png"
+                alt="Preventec Franquias"
+                className="h-20 w-auto object-contain border bg-white rounded"
+              />
               <div className="flex flex-col leading-tight">
                 <span className="font-bold text-base text-white tracking-tight">PREVENTEC</span>
                 <span className="text-[10px] text-white/60 font-medium tracking-widest uppercase">Franquias</span>
@@ -21,13 +23,22 @@ export function Footer() {
               Especialistas em Medicina e Segurança do Trabalho. Construa um negócio sólido com o suporte de quem entende do setor.
             </p>
             <div className="flex items-center gap-3">
-              <a href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="Instagram">
+              <a 
+                href="https://www.instagram.com/preventecsinop" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" 
+                aria-label="Instagram"
+              >
                 <Instagram className="w-4 h-4" />
               </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="LinkedIn">
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="Facebook">
+              <a 
+                href="https://www.facebook.com/preventecsinop" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" 
+                aria-label="Facebook"
+              >
                 <Facebook className="w-4 h-4" />
               </a>
             </div>
@@ -60,11 +71,9 @@ export function Footer() {
             <ul className="space-y-3">
               {[
                 "Medicina do Trabalho",
-                "PCMSO",
-                "PGR / LTCAT",
                 "Segurança do Trabalho",
-                "Exames Ocupacionais",
                 "Gestão de SST",
+                "Envio eSocial",
               ].map((service) => (
                 <li key={service}>
                   <span className="text-white/70 text-sm">{service}</span>
@@ -79,15 +88,15 @@ export function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Phone className="w-4 h-4 text-white/60 mt-0.5 flex-shrink-0" />
-                <span className="text-white/70 text-sm">(11) 9 9999-9999</span>
+                <span className="text-white/70 text-sm">(66) 3531-1590</span>
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-white/60 mt-0.5 flex-shrink-0" />
-                <span className="text-white/70 text-sm">contato@preventecfranquias.com.br</span>
+                <span className="text-white/70 text-sm">comercial@preventecfranquias.com.br</span>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-white/60 mt-0.5 flex-shrink-0" />
-                <span className="text-white/70 text-sm">São Paulo, SP - Brasil</span>
+                <span className="text-white/70 text-sm">Sinop, MT - Brasil</span>
               </li>
             </ul>
             <div className="mt-6">

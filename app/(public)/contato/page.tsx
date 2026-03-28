@@ -10,6 +10,8 @@ export default function ContatoPage() {
     company: '',
     subject: '',
     message: '',
+    region: '',
+    franchiseModel: '',
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -33,6 +35,8 @@ export default function ContatoPage() {
         company: '',
         subject: '',
         message: '',
+        region: '',
+        franchiseModel: '',
       });
     }, 3000);
   };
@@ -76,8 +80,8 @@ export default function ContatoPage() {
                 <div>
                   <h3 className="font-semibold text-foreground mb-2">Email</h3>
                   <p className="text-muted-foreground">
-                    <a href="mailto:contato@preventec.com.br" className="hover:text-primary transition-colors">
-                      contato@preventecfranquias.com.br
+                    <a href="mailto:comercial@preventecfranquias.com.br" className="hover:text-primary transition-colors">
+                      comercial@preventecfranquias.com.br
                     </a>
                   </p>
                 </div>
@@ -96,7 +100,7 @@ export default function ContatoPage() {
                 <div>
                   <h3 className="font-semibold text-foreground mb-2">Horário de Funcionamento</h3>
                   <p className="text-muted-foreground">
-                    Segunda a Sexta: 07:00 às 17:00<br />
+                    Segunda a Sexta: 07:00 às 11:00 e das 13:00 às 17:00<br />
                   </p>
                 </div>
               </div>
@@ -180,27 +184,47 @@ export default function ContatoPage() {
                         placeholder="Sua empresa"
                       />
                     </div>
-                  </div>
+                  </div>                 
 
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-semibold text-foreground mb-2">
-                      Assunto *
-                    </label>
-                    <select
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                    >
-                      <option value="">Selecione um assunto</option>
-                      <option value="informacoes">Informações Gerais</option>
-                      <option value="consultoria">Consultoria</option>
-                      <option value="franchising">Franchising</option>
-                      <option value="treinamento">Treinamento</option>
-                      <option value="outro">Outro</option>
-                    </select>
+                  <div className="grid md:grid-cols-2 gap-4">
+
+                    {/* Região */}
+                    <div>
+                      <label htmlFor="region" className="block text-sm font-semibold text-foreground mb-2">
+                        Região de Interesse *
+                      </label>
+                      <input
+                        type="text"
+                        id="region"
+                        name="region"
+                        value={formData.region}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-border bg-white text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                        placeholder="Ex: Sinop - MT"
+                      />
+                    </div>
+
+                    {/* Modalidade */}
+                    <div>
+                      <label htmlFor="franchiseModel" className="block text-sm font-semibold text-foreground mb-2">
+                        Modalidade de Interesse *
+                      </label>
+                      <select
+                        id="franchiseModel"
+                        name="franchiseModel"
+                        value={formData.franchiseModel}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      >
+                        <option value="">Selecione a modalidade</option>
+                        <option value="mod1">Modalidade 1 - Medicina do Trabalho</option>
+                        <option value="mod2">Modalidade 2 - Medicina e Segurança do Trabalho</option>
+                        <option value="mod3">Modalidade 3 - Medicina + Segurança + Diagnóstico por Imagem</option>
+                      </select>
+                    </div>
+
                   </div>
 
                   <div>
