@@ -41,13 +41,20 @@ export default function SobrePage() {
                 Nossa história começa com um problema real
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                A Preventec nasceu da observação de um problema crítico no mercado brasileiro: a maioria das empresas, especialmente as de pequeno e médio porte, encontrava dificuldades para acessar serviços de qualidade em Medicina e Segurança do Trabalho.
+                Em 1997, Gislene Andrea Negrão Cristóvão, fonoaudióloga formada e natural de Porecatu–PR, mudou-se para Sinop–MT, 
+                onde iniciou sua atuação profissional e conheceu seu esposo, Carlos Eduardo Scaramuza Cristóvão. Poucos meses depois, 
+                nascia a PREVENTEC, começando com uma pequena unidade e atendimentos limitados. Em pouco tempo, o crescimento exigiu expansão, 
+                levando à abertura de novas unidades em diversas cidades do Mato Grosso e à construção da sede própria em Sinop.
               </p>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                Com mais de 15 anos de atuação no setor, desenvolvemos uma metodologia própria que combina expertise técnica com gestão eficiente, criando um modelo de negócio replicável e escalável.
+                A PREVENTEC consolidou-se com um modelo de atendimento eficiente, incluindo serviços in-loco com realização de exames complementares, 
+                como o raio-X ocupacional. A busca constante por excelência e qualificação das equipes mantém a empresa atualizada com as normas regulamentadoras 
+                e legislações, garantindo um serviço de alta qualidade e liderança no mercado.
               </p>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                Hoje, nossa rede de franquias está presente em todo o território nacional, levando serviços de excelência a empresas de todos os portes, cumprindo todas as exigências das normas regulamentadoras e construindo ambientes de trabalho mais seguros e saudáveis.
+                Mediante a crescente demanda de atendimentos e procura constante pela prestação dos serviços de segurança e medicina do trabalho nos estados 
+                do Mato Grosso e Pará, a PREVENTEC®, decidiu inovar mais uma vez, sendo pioneira na venda de franquias de serviços dos setores de medicina e 
+                segurança do trabalho para a região Norte do Mato Grosso e estado do Pará, mas não para por aí muitas novidades serão divulgadas em breve. 
               </p>
               <Button asChild>
                 <Link href="/contato">
