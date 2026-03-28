@@ -38,7 +38,7 @@ export default function SobrePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
             <div>
               <h2 className="text-3xl font-bold text-foreground mb-6 text-balance">
-                Nossa história começa com um problema real
+                Nossa história começa...
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 Em 1997, Gislene Andrea Negrão Cristóvão, fonoaudióloga formada e natural de Porecatu–PR, mudou-se para Sinop–MT, 
