@@ -4,8 +4,9 @@ import { cookies } from "next/headers";
 export type SessionPayload = {
   userId: string;
   email: string;
-  role: "ADMIN" | "EDITOR" | "REVIEWER";
+  role: "MASTER" | "ADMIN" | "EDITOR" | "REVIEWER";
   name: string;
+  lastActivity: number;
 };
 
 const secretValue = process.env.JWT_SECRET;
@@ -24,7 +25,7 @@ export async function createSessionToken(payload: SessionPayload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("7d")
+    .setExpirationTime("5m")
     .sign(secret);
 }
 
@@ -41,7 +42,6 @@ export async function setSessionCookie(token: string) {
     secure: isProduction(),
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7,
   });
 }
 

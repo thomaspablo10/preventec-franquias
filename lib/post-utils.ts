@@ -4,36 +4,28 @@ import {
   PostCategory,
   PostMediaType,
   PostStatus,
-  UserRole,
+  PostSubcategory,
 } from "@prisma/client";
+import {
+  getPostCategoryLabel as getCategoryLabelFromMap,
+  getPostSubcategoryLabel as getSubcategoryLabelFromMap,
+} from "@/lib/post-categories";
 
 export function getPostCategoryLabel(category: PostCategory) {
-  if (category === "MEDICINA_DO_TRABALHO") return "Medicina do Trabalho";
-  if (category === "SEGURANCA_DO_TRABALHO") return "Segurança do Trabalho";
-  if (category === "FINANCEIRO") return "Financeiro";
-  if (category === "TECNOLOGIA_DA_INFORMACAO") return "Tecnologia da Informação";
-  return "Notícias Gerais";
+  return getCategoryLabelFromMap(category);
+}
+
+export function getPostSubcategoryLabel(subcategory: PostSubcategory) {
+  return getSubcategoryLabelFromMap(subcategory);
 }
 
 export function getPostStatusLabel(status: PostStatus) {
   if (status === "DRAFT") return "Rascunho";
-  if (status === "APPROVAL") return "Aprovação";
-  if (status === "ADJUSTMENT") return "Ajustar";
-  if (status === "REJECTED") return "Reprovado";
+  if (status === "IN_REVIEW") return "Em revisão";
+  if (status === "CHANGES_REQUESTED") return "Ajustes solicitados";
+  if (status === "REJECTED") return "Recusado";
+  if (status === "APPROVED") return "Aprovado";
   return "Publicado";
-}
-
-export function normalizePostStatusForRole(
-  role: UserRole,
-  requestedStatus: PostStatus
-): PostStatus {
-  if (role === "EDITOR") {
-    if (requestedStatus === "PUBLISHED") return "APPROVAL";
-    if (requestedStatus === "REJECTED") return "APPROVAL";
-    if (requestedStatus === "ADJUSTMENT") return "APPROVAL";
-  }
-
-  return requestedStatus;
 }
 
 export function isValidYoutubeUrl(url: string) {

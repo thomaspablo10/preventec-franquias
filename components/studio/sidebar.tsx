@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 type StudioSidebarProps = {
-  role: "ADMIN" | "EDITOR" | "REVIEWER";
+  role: "MASTER" | "ADMIN" | "EDITOR" | "REVIEWER";
 };
 
 export function StudioSidebar({ role }: StudioSidebarProps) {
@@ -27,15 +27,6 @@ export function StudioSidebar({ role }: StudioSidebarProps) {
           Posts
         </Link>
 
-        {(role === "ADMIN" || role === "REVIEWER") && (
-          <Link
-            href="/studio/review"
-            className="rounded-xl px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
-          >
-            Revisão
-          </Link>
-        )}
-
         <Link
           href="/studio/profile"
           className="rounded-xl px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
@@ -43,12 +34,21 @@ export function StudioSidebar({ role }: StudioSidebarProps) {
           Meu perfil
         </Link>
 
-        {role === "ADMIN" && (
+        {(role === "MASTER" || role === "ADMIN") && (
           <Link
             href="/studio/users"
             className="rounded-xl px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
           >
             Usuários
+          </Link>
+        )}
+
+        {role === "MASTER" && (
+          <Link
+            href="/studio/master"
+            className="rounded-xl px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50"
+          >
+            Master
           </Link>
         )}
       </nav>

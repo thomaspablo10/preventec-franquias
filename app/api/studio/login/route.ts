@@ -10,8 +10,6 @@ export async function POST(req: Request) {
     const email = body.email?.trim().toLowerCase();
     const password = body.password?.trim();
 
-    console.log("LOGIN EMAIL RECEBIDO:", email);
-
     if (!email || !password) {
       return NextResponse.json(
         { error: "E-mail e senha são obrigatórios." },
@@ -23,9 +21,6 @@ export async function POST(req: Request) {
       where: { email },
     });
 
-    console.log("USUÁRIO ENCONTRADO:", !!user);
-    console.log("USUÁRIO ATIVO:", user?.isActive);
-
     if (!user || !user.isActive) {
       return NextResponse.json(
         { error: "Credenciais inválidas." },
@@ -34,8 +29,6 @@ export async function POST(req: Request) {
     }
 
     const passwordIsValid = await compare(password, user.passwordHash);
-
-    console.log("SENHA VÁLIDA:", passwordIsValid);
 
     if (!passwordIsValid) {
       return NextResponse.json(
@@ -49,6 +42,7 @@ export async function POST(req: Request) {
       email: user.email,
       role: user.role,
       name: user.name,
+      lastActivity: Math.floor(Date.now() / 1000),
     });
 
     await setSessionCookie(token);

@@ -22,6 +22,7 @@ export default async function StudioEditPostPage({ params }: PageProps) {
       excerpt: true,
       content: true,
       category: true,
+      subcategory: true,
       mediaType: true,
       mediaUrl: true,
       status: true,
@@ -33,13 +34,25 @@ export default async function StudioEditPostPage({ params }: PageProps) {
     notFound();
   }
 
-  if (post.status === "PUBLISHED" && session.role !== "ADMIN") {
+  const isOwner = post.creatorId === session.userId;
+  const isMaster = session.role === "MASTER";
+
+  if (post.status === "PUBLISHED" && !isMaster) {
     notFound();
   }
 
-  if (session.role === "EDITOR" && post.creatorId !== session.userId) {
+  if (!isMaster && session.role === "EDITOR" && !isOwner) {
     notFound();
   }
+
+  const user = await prisma.user.findUnique({
+    where: { id: post.creatorId },
+    select: {
+      publicName: true,
+      jobTitle: true,
+      name: true,
+    },
+  });
 
   return (
     <main>
@@ -59,11 +72,14 @@ export default async function StudioEditPostPage({ params }: PageProps) {
           excerpt: post.excerpt ?? "",
           content: post.content,
           category: post.category,
+          subcategory: post.subcategory,
           mediaType: post.mediaType ?? "",
           mediaUrl: post.mediaUrl ?? "",
           status: post.status,
           isPublished: post.status === "PUBLISHED",
         }}
+        authorName={user?.publicName || user?.name || session.name}
+        authorRole={user?.jobTitle || ""}
       />
     </main>
   );

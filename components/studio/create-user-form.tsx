@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-type RoleOption = "ADMIN" | "EDITOR" | "REVIEWER";
+type RoleOption = "MASTER" | "ADMIN" | "EDITOR" | "REVIEWER";
 
 type UserItem = {
   id: string;
@@ -16,9 +16,13 @@ type UserItem = {
 
 type CreateUserFormProps = {
   onCreated: (user: UserItem) => void;
+  currentUserRole: RoleOption;
 };
 
-export function CreateUserForm({ onCreated }: CreateUserFormProps) {
+export function CreateUserForm({
+  onCreated,
+  currentUserRole,
+}: CreateUserFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<RoleOption>("EDITOR");
@@ -26,6 +30,14 @@ export function CreateUserForm({ onCreated }: CreateUserFormProps) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  const availableRoles = useMemo(() => {
+    if (currentUserRole === "MASTER") {
+      return ["MASTER", "ADMIN", "EDITOR", "REVIEWER"] as RoleOption[];
+    }
+
+    return ["ADMIN", "EDITOR", "REVIEWER"] as RoleOption[];
+  }, [currentUserRole]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -72,7 +84,7 @@ export function CreateUserForm({ onCreated }: CreateUserFormProps) {
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
       <h2 className="text-lg font-bold text-zinc-900">Novo usuário</h2>
       <p className="mt-2 text-sm text-zinc-600">
-        Crie administradores, editores ou revisores.
+        Crie usuários para o Studio com o perfil adequado.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
@@ -113,9 +125,17 @@ export function CreateUserForm({ onCreated }: CreateUserFormProps) {
             onChange={(event) => setRole(event.target.value as RoleOption)}
             className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
           >
-            <option value="ADMIN">Admin</option>
-            <option value="EDITOR">Editor</option>
-            <option value="REVIEWER">Revisor</option>
+            {availableRoles.map((roleOption) => (
+              <option key={roleOption} value={roleOption}>
+                {roleOption === "MASTER"
+                  ? "Master"
+                  : roleOption === "ADMIN"
+                  ? "Admin"
+                  : roleOption === "EDITOR"
+                  ? "Editor"
+                  : "Revisor"}
+              </option>
+            ))}
           </select>
         </div>
 

@@ -21,34 +21,35 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  const adminEmail = "admin@preventecfranquias.com.br";
-  const adminPassword = "Admin@123456";
-  const passwordHash = await hash(adminPassword, 10);
+  const email = "master@ricossystems.com.br";
+  const password = "123456";
+
+  const passwordHash = await hash(password, 10);
 
   await prisma.user.upsert({
-    where: { email: adminEmail },
+    where: { email },
     update: {
-      name: "Administrador Inicial",
+      name: "Master Ricossystems",
       passwordHash,
-      role: UserRole.ADMIN,
+      role: UserRole.MASTER,
       isActive: true,
-      publicName: "Administrador Inicial",
-      jobTitle: "Equipe Preventec",
+      publicName: "Master Ricossystems",
+      jobTitle: "Administrador Master",
     },
     create: {
-      name: "Administrador Inicial",
-      email: adminEmail,
+      name: "Master Ricossystems",
+      email,
       passwordHash,
-      role: UserRole.ADMIN,
+      role: UserRole.MASTER,
       isActive: true,
-      publicName: "Administrador Inicial",
-      jobTitle: "Equipe Preventec",
+      publicName: "Master Ricossystems",
+      jobTitle: "Administrador Master",
     },
   });
 
-  console.log("Admin inicial configurado com sucesso.");
-  console.log(`Email: ${adminEmail}`);
-  console.log(`Senha: ${adminPassword}`);
+  console.log("MASTER configurado com sucesso.");
+  console.log("Email: master@ricossystems.com.br");
+  console.log("Senha: 123456");
 }
 
 main()

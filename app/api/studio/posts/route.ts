@@ -3,31 +3,15 @@ import {
   PostCategory,
   PostMediaType,
   PostStatus,
+  PostSubcategory,
 } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
-import {
-  generateUniqueSlug,
-  normalizePostStatusForRole,
-  validateMediaFields,
-} from "@/lib/post-utils";
+import { generateUniqueSlug, validateMediaFields } from "@/lib/post-utils";
+import { isValidSubcategoryForCategory } from "@/lib/post-categories";
 
-const allowedStatuses: PostStatus[] = [
-  "DRAFT",
-  "APPROVAL",
-  "ADJUSTMENT",
-  "REJECTED",
-  "PUBLISHED",
-];
-
-const allowedCategories: PostCategory[] = [
-  "MEDICINA_DO_TRABALHO",
-  "SEGURANCA_DO_TRABALHO",
-  "FINANCEIRO",
-  "TECNOLOGIA_DA_INFORMACAO",
-  "NOTICIAS_GERAIS",
-];
-
+const allowedCategories = Object.values(PostCategory);
+const allowedSubcategories = Object.values(PostSubcategory);
 const allowedMediaTypes: PostMediaType[] = ["IMAGE", "YOUTUBE"];
 
 export async function GET() {
@@ -89,7 +73,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
     }
 
-    if (!["ADMIN", "EDITOR", "REVIEWER"].includes(session.role)) {
+    if (!["MASTER", "ADMIN", "EDITOR"].includes(session.role)) {
       return NextResponse.json({ error: "Acesso negado." }, { status: 403 });
     }
 
@@ -99,28 +83,65 @@ export async function POST(req: Request) {
     const excerpt = body.excerpt?.trim() || null;
     const content = body.content?.trim();
     const category = body.category?.trim() as PostCategory;
+    const subcategory = (body.subcategory?.trim() || "GERAL") as PostSubcategory;
     const mediaType = (body.mediaType?.trim() || null) as PostMediaType | null;
     const mediaUrl = body.mediaUrl?.trim() || null;
     const requestedStatus = body.status?.trim() as PostStatus;
-    const reviewNote = body.reviewNote?.trim() || null;
 
-    if (!title || !content || !category || !requestedStatus) {
+    if (
+      !title ||
+      !content?.replace(/<[^>]*>/g, "").trim() ||
+      !category ||
+      !subcategory ||
+      !requestedStatus
+    ) {
       return NextResponse.json(
-        { error: "Título, conteúdo, área e status são obrigatórios." },
+        {
+          error:
+            "Título, conteúdo, categoria, subcategoria e status são obrigatórios.",
+        },
         { status: 400 }
       );
     }
 
-    if (!allowedStatuses.includes(requestedStatus)) {
-      return NextResponse.json(
-        { error: "Status inválido." },
-        { status: 400 }
-      );
+    if (session.role === "MASTER" || session.role === "ADMIN") {
+      if (
+        ![
+          "DRAFT",
+          "IN_REVIEW",
+          "CHANGES_REQUESTED",
+          "REJECTED",
+          "APPROVED",
+        ].includes(requestedStatus)
+      ) {
+        return NextResponse.json(
+          { error: "Status inválido para criação." },
+          { status: 400 }
+        );
+      }
+    } else {
+      if (!["DRAFT", "IN_REVIEW"].includes(requestedStatus)) {
+        return NextResponse.json(
+          { error: "Status inválido para criação." },
+          { status: 400 }
+        );
+      }
     }
 
     if (!allowedCategories.includes(category)) {
+      return NextResponse.json({ error: "Categoria inválida." }, { status: 400 });
+    }
+
+    if (!allowedSubcategories.includes(subcategory)) {
       return NextResponse.json(
-        { error: "Área inválida." },
+        { error: "Subcategoria inválida." },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidSubcategoryForCategory(category, subcategory)) {
+      return NextResponse.json(
+        { error: "Subcategoria incompatível com a categoria escolhida." },
         { status: 400 }
       );
     }
@@ -141,16 +162,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const finalStatus = normalizePostStatusForRole(session.role, requestedStatus);
     const slug = await generateUniqueSlug(title);
-
-    const creator = await prisma.user.findUnique({
-      where: { id: session.userId },
-      select: {
-        publicName: true,
-        jobTitle: true,
-      },
-    });
 
     const post = await prisma.post.create({
       data: {
@@ -159,27 +171,11 @@ export async function POST(req: Request) {
         excerpt,
         content,
         category,
+        subcategory,
         mediaType,
         mediaUrl,
-        status: finalStatus,
-        reviewNote:
-          session.role === "ADMIN" || session.role === "REVIEWER"
-            ? reviewNote
-            : null,
+        status: requestedStatus,
         creatorId: session.userId,
-        reviewerId:
-          session.role === "ADMIN" || session.role === "REVIEWER"
-            ? session.userId
-            : null,
-        publishedAt: finalStatus === "PUBLISHED" ? new Date() : null,
-        publishedAuthorName:
-          finalStatus === "PUBLISHED"
-            ? creator?.publicName || session.name
-            : null,
-        publishedAuthorRole:
-          finalStatus === "PUBLISHED"
-            ? creator?.jobTitle || null
-            : null,
       },
       include: {
         creator: {

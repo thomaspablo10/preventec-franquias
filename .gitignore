@@ -17,3 +17,5 @@ dist
 build
 Dockerfile.local
 *.log
+storage/blog/*
+!storage/blog/.gitkeep

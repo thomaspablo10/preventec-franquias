@@ -7,6 +7,14 @@ export default async function StudioUsersPage() {
   const session = await requireStudioRole(["ADMIN"]);
 
   const users = await prisma.user.findMany({
+    where:
+      session.role === "MASTER"
+        ? {}
+        : {
+            role: {
+              not: "MASTER",
+            },
+          },
     orderBy: {
       createdAt: "desc",
     },
@@ -30,7 +38,15 @@ export default async function StudioUsersPage() {
         role={session.role}
       />
 
-      <UsersTable initialUsers={users} currentUserId={session.userId} />
+      <UsersTable
+        initialUsers={users.map((user) => ({
+          ...user,
+          createdAt: user.createdAt.toISOString(),
+          updatedAt: user.updatedAt.toISOString(),
+        }))}
+        currentUserId={session.userId}
+        currentUserRole={session.role}
+      />
     </main>
   );
 }

@@ -12,7 +12,7 @@ export async function PATCH(_req: Request, context: RouteContext) {
   try {
     const session = await getSession();
 
-    if (!session || session.role !== "ADMIN") {
+    if (!session || !["MASTER", "ADMIN"].includes(session.role)) {
       return NextResponse.json({ error: "Acesso negado." }, { status: 403 });
     }
 
@@ -42,6 +42,13 @@ export async function PATCH(_req: Request, context: RouteContext) {
       );
     }
 
+    if (user.role === "MASTER" && session.role !== "MASTER") {
+      return NextResponse.json(
+        { error: "Somente MASTER pode alterar status de outro MASTER." },
+        { status: 403 }
+      );
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id },
       data: {
@@ -60,7 +67,11 @@ export async function PATCH(_req: Request, context: RouteContext) {
 
     return NextResponse.json({
       success: true,
-      user: updatedUser,
+      user: {
+        ...updatedUser,
+        createdAt: updatedUser.createdAt.toISOString(),
+        updatedAt: updatedUser.updatedAt.toISOString(),
+      },
     });
   } catch (error) {
     console.error("Erro ao alterar status do usuário:", error);

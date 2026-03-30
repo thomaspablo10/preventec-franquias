@@ -6,7 +6,6 @@ export function Footer() {
     <footer className="bg-[#0f2260] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <img
@@ -44,7 +43,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Links Rápidos */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Links Rápidos</h3>
             <ul className="space-y-3">
@@ -53,11 +51,15 @@ export function Footer() {
                 { href: "/sobre", label: "Sobre Nós" },
                 { href: "/modalidades", label: "Modalidades" },
                 { href: "/como-funciona", label: "Como Funciona" },
+                { href: "/studio/login", label: "Studio", studio: true },
                 { href: "/blog", label: "Blog" },
-                { href: "/contato", label: "Contato" },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-white/70 hover:text-white text-sm transition-colors">
+                  <Link
+                    href={link.href}
+                    prefetch={link.studio ? false : undefined}
+                    className="text-white/70 hover:text-white text-sm transition-colors"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -65,7 +67,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Serviços */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Serviços</h3>
             <ul className="space-y-3">
@@ -73,7 +74,9 @@ export function Footer() {
                 "Medicina do Trabalho",
                 "Segurança do Trabalho",
                 "Gestão de SST",
-                "Envio eSocial",
+                "Normas Regulamentadoras",
+                "Palestras",
+                "Treinamentos",
               ].map((service) => (
                 <li key={service}>
                   <span className="text-white/70 text-sm">{service}</span>
@@ -82,10 +85,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contato */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Contato</h3>
-            <ul className="space-y-4">
+            <ul className="space-y-4">              
               <li className="flex items-start gap-3">
                 <Phone className="w-4 h-4 text-white/60 mt-0.5 flex-shrink-0" />
                 <span className="text-white/70 text-sm">(66) 3531-1590</span>
@@ -96,7 +98,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-white/60 mt-0.5 flex-shrink-0" />
-                <span className="text-white/70 text-sm">Sinop, MT - Brasil</span>
+                <span className="text-white/70 text-sm">Av das Embaúbas, 2065, Setor Comercial, CEP 78550-108, Sinop, MT - Brasil</span>
               </li>
             </ul>
             <div className="mt-6">

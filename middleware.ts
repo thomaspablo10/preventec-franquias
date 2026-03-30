@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { jwtVerify } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 
 const secretValue = process.env.JWT_SECRET;
 
@@ -9,9 +9,46 @@ if (!secretValue) {
 }
 
 const secret = new TextEncoder().encode(secretValue);
+const INACTIVITY_LIMIT_SECONDS = 60 * 5;
+
+type SessionPayload = {
+  userId: string;
+  email: string;
+  role: "ADMIN" | "EDITOR" | "REVIEWER";
+  name: string;
+  lastActivity: number;
+  iat?: number;
+  exp?: number;
+};
 
 function isProduction() {
   return process.env.NODE_ENV === "production";
+}
+
+async function signSessionToken(payload: SessionPayload) {
+  return await new SignJWT({
+    userId: payload.userId,
+    email: payload.email,
+    role: payload.role,
+    name: payload.name,
+    lastActivity: payload.lastActivity,
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("5m")
+    .sign(secret);
+}
+
+function clearStudioCookie(response: NextResponse) {
+  response.cookies.set("studio_session", "", {
+    httpOnly: true,
+    secure: isProduction(),
+    sameSite: "lax",
+    path: "/",
+    expires: new Date(0),
+  });
+
+  return response;
 }
 
 export async function middleware(request: NextRequest) {
@@ -28,18 +65,19 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      await jwtVerify(token, secret);
+      const { payload } = await jwtVerify(token, secret);
+      const session = payload as unknown as SessionPayload;
+
+      const now = Math.floor(Date.now() / 1000);
+      const inactiveFor = now - (session.lastActivity || 0);
+
+      if (inactiveFor > INACTIVITY_LIMIT_SECONDS) {
+        return clearStudioCookie(NextResponse.next());
+      }
+
       return NextResponse.redirect(new URL("/studio/dashboard", request.url));
     } catch {
-      const response = NextResponse.next();
-      response.cookies.set("studio_session", "", {
-        httpOnly: true,
-        secure: isProduction(),
-        sameSite: "lax",
-        path: "/",
-        expires: new Date(0),
-      });
-      return response;
+      return clearStudioCookie(NextResponse.next());
     }
   }
 
@@ -48,18 +86,40 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    await jwtVerify(token, secret);
-    return NextResponse.next();
-  } catch {
-    const response = NextResponse.redirect(new URL("/studio/login", request.url));
-    response.cookies.set("studio_session", "", {
+    const { payload } = await jwtVerify(token, secret);
+    const session = payload as unknown as SessionPayload;
+
+    const now = Math.floor(Date.now() / 1000);
+    const inactiveFor = now - (session.lastActivity || 0);
+
+    if (inactiveFor > INACTIVITY_LIMIT_SECONDS) {
+      return clearStudioCookie(
+        NextResponse.redirect(new URL("/studio/login", request.url))
+      );
+    }
+
+    const refreshedToken = await signSessionToken({
+      userId: session.userId,
+      email: session.email,
+      role: session.role,
+      name: session.name,
+      lastActivity: now,
+    });
+
+    const response = NextResponse.next();
+
+    response.cookies.set("studio_session", refreshedToken, {
       httpOnly: true,
       secure: isProduction(),
       sameSite: "lax",
       path: "/",
-      expires: new Date(0),
     });
+
     return response;
+  } catch {
+    return clearStudioCookie(
+      NextResponse.redirect(new URL("/studio/login", request.url))
+    );
   }
 }
 

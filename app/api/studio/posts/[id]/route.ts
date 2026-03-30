@@ -3,14 +3,12 @@ import {
   PostCategory,
   PostMediaType,
   PostStatus,
+  PostSubcategory,
 } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
-import {
-  generateUniqueSlug,
-  normalizePostStatusForRole,
-  validateMediaFields,
-} from "@/lib/post-utils";
+import { generateUniqueSlug, validateMediaFields } from "@/lib/post-utils";
+import { isValidSubcategoryForCategory } from "@/lib/post-categories";
 
 type RouteContext = {
   params: Promise<{
@@ -18,22 +16,8 @@ type RouteContext = {
   }>;
 };
 
-const allowedStatuses: PostStatus[] = [
-  "DRAFT",
-  "APPROVAL",
-  "ADJUSTMENT",
-  "REJECTED",
-  "PUBLISHED",
-];
-
-const allowedCategories: PostCategory[] = [
-  "MEDICINA_DO_TRABALHO",
-  "SEGURANCA_DO_TRABALHO",
-  "FINANCEIRO",
-  "TECNOLOGIA_DA_INFORMACAO",
-  "NOTICIAS_GERAIS",
-];
-
+const allowedCategories = Object.values(PostCategory);
+const allowedSubcategories = Object.values(PostSubcategory);
 const allowedMediaTypes: PostMediaType[] = ["IMAGE", "YOUTUBE"];
 
 export async function GET(_req: Request, context: RouteContext) {
@@ -77,7 +61,13 @@ export async function GET(_req: Request, context: RouteContext) {
       );
     }
 
-    if (session.role === "EDITOR" && post.creatorId !== session.userId) {
+    const canAccess =
+      session.role === "MASTER" ||
+      session.role === "ADMIN" ||
+      session.role === "REVIEWER" ||
+      post.creatorId === session.userId;
+
+    if (!canAccess) {
       return NextResponse.json({ error: "Acesso negado." }, { status: 403 });
     }
 
@@ -107,6 +97,7 @@ export async function PATCH(req: Request, context: RouteContext) {
       select: {
         id: true,
         creatorId: true,
+        status: true,
       },
     });
 
@@ -117,8 +108,21 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
-    if (session.role === "EDITOR" && existingPost.creatorId !== session.userId) {
+    const isMaster = session.role === "MASTER";
+    const isAdmin = session.role === "ADMIN";
+    const isOwner = existingPost.creatorId === session.userId;
+
+    const canEdit = isMaster || isAdmin || isOwner;
+
+    if (!canEdit) {
       return NextResponse.json({ error: "Acesso negado." }, { status: 403 });
+    }
+
+    if (existingPost.status === "PUBLISHED" && !isMaster) {
+      return NextResponse.json(
+        { error: "Somente o MASTER pode editar post publicado." },
+        { status: 403 }
+      );
     }
 
     const body = await req.json();
@@ -127,28 +131,70 @@ export async function PATCH(req: Request, context: RouteContext) {
     const excerpt = body.excerpt?.trim() || null;
     const content = body.content?.trim();
     const category = body.category?.trim() as PostCategory;
+    const subcategory = (body.subcategory?.trim() || "GERAL") as PostSubcategory;
     const mediaType = (body.mediaType?.trim() || null) as PostMediaType | null;
     const mediaUrl = body.mediaUrl?.trim() || null;
     const requestedStatus = body.status?.trim() as PostStatus;
-    const reviewNote = body.reviewNote?.trim() || null;
 
-    if (!title || !content || !category || !requestedStatus) {
+    if (
+      !title ||
+      !content?.replace(/<[^>]*>/g, "").trim() ||
+      !category ||
+      !subcategory ||
+      !requestedStatus
+    ) {
       return NextResponse.json(
-        { error: "Título, conteúdo, área e status são obrigatórios." },
+        {
+          error:
+            "Título, conteúdo, categoria, subcategoria e status são obrigatórios.",
+        },
         { status: 400 }
       );
     }
 
-    if (!allowedStatuses.includes(requestedStatus)) {
-      return NextResponse.json(
-        { error: "Status inválido." },
-        { status: 400 }
-      );
+    if (isMaster) {
+      // MASTER pode tudo
+    } else if (isAdmin) {
+      if (
+        ![
+          "DRAFT",
+          "IN_REVIEW",
+          "CHANGES_REQUESTED",
+          "REJECTED",
+          "APPROVED",
+        ].includes(requestedStatus)
+      ) {
+        return NextResponse.json(
+          { error: "Status inválido para edição." },
+          { status: 400 }
+        );
+      }
+    } else {
+      if (!["DRAFT", "IN_REVIEW"].includes(requestedStatus)) {
+        return NextResponse.json(
+          {
+            error:
+              "Editor só pode salvar como rascunho ou enviar novamente para revisão.",
+          },
+          { status: 400 }
+        );
+      }
     }
 
     if (!allowedCategories.includes(category)) {
+      return NextResponse.json({ error: "Categoria inválida." }, { status: 400 });
+    }
+
+    if (!allowedSubcategories.includes(subcategory)) {
       return NextResponse.json(
-        { error: "Área inválida." },
+        { error: "Subcategoria inválida." },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidSubcategoryForCategory(category, subcategory)) {
+      return NextResponse.json(
+        { error: "Subcategoria incompatível com a categoria escolhida." },
         { status: 400 }
       );
     }
@@ -169,16 +215,7 @@ export async function PATCH(req: Request, context: RouteContext) {
       );
     }
 
-    const finalStatus = normalizePostStatusForRole(session.role, requestedStatus);
     const slug = await generateUniqueSlug(title, id);
-
-    const creator = await prisma.user.findUnique({
-      where: { id: existingPost.creatorId },
-      select: {
-        publicName: true,
-        jobTitle: true,
-      },
-    });
 
     const updatedPost = await prisma.post.update({
       where: { id },
@@ -188,26 +225,11 @@ export async function PATCH(req: Request, context: RouteContext) {
         excerpt,
         content,
         category,
+        subcategory,
         mediaType,
         mediaUrl,
-        status: finalStatus,
-        reviewNote:
-          session.role === "ADMIN" || session.role === "REVIEWER"
-            ? reviewNote
-            : undefined,
-        reviewerId:
-          session.role === "ADMIN" || session.role === "REVIEWER"
-            ? session.userId
-            : undefined,
-        publishedAt: finalStatus === "PUBLISHED" ? new Date() : null,
-        publishedAuthorName:
-          finalStatus === "PUBLISHED"
-            ? creator?.publicName || null
-            : null,
-        publishedAuthorRole:
-          finalStatus === "PUBLISHED"
-            ? creator?.jobTitle || null
-            : null,
+        status: requestedStatus,
+        reviewerId: requestedStatus === "IN_REVIEW" ? null : undefined,
       },
       include: {
         creator: {
@@ -240,6 +262,54 @@ export async function PATCH(req: Request, context: RouteContext) {
 
     return NextResponse.json(
       { error: "Erro ao atualizar post." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(_req: Request, context: RouteContext) {
+  try {
+    const session = await getSession();
+
+    if (!session) {
+      return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+    }
+
+    if (session.role !== "MASTER") {
+      return NextResponse.json(
+        { error: "Somente o MASTER pode excluir posts." },
+        { status: 403 }
+      );
+    }
+
+    const { id } = await context.params;
+
+    const existingPost = await prisma.post.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!existingPost) {
+      return NextResponse.json(
+        { error: "Post não encontrado." },
+        { status: 404 }
+      );
+    }
+
+    await prisma.postMessage.deleteMany({
+      where: { postId: id },
+    });
+
+    await prisma.post.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Erro ao excluir post:", error);
+
+    return NextResponse.json(
+      { error: "Erro ao excluir post." },
       { status: 500 }
     );
   }

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { CreateUserForm } from "@/components/studio/create-user-form";
+import { EditUserModal } from "@/components/studio/edit-user-modal";
 
-type RoleOption = "ADMIN" | "EDITOR" | "REVIEWER";
+type RoleOption = "MASTER" | "ADMIN" | "EDITOR" | "REVIEWER";
 
 export type UserItem = {
   id: string;
@@ -18,6 +19,7 @@ export type UserItem = {
 type UsersTableProps = {
   initialUsers: UserItem[];
   currentUserId: string;
+  currentUserRole: RoleOption;
 };
 
 function formatDate(date: string) {
@@ -28,6 +30,7 @@ function formatDate(date: string) {
 }
 
 function roleLabel(role: RoleOption) {
+  if (role === "MASTER") return "Master";
   if (role === "ADMIN") return "Admin";
   if (role === "EDITOR") return "Editor";
   return "Revisor";
@@ -36,12 +39,20 @@ function roleLabel(role: RoleOption) {
 export function UsersTable({
   initialUsers,
   currentUserId,
+  currentUserRole,
 }: UsersTableProps) {
   const [users, setUsers] = useState(initialUsers);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [editingUser, setEditingUser] = useState<UserItem | null>(null);
 
   function handleCreated(user: UserItem) {
     setUsers((current) => [user, ...current]);
+  }
+
+  function handleSaved(updatedUser: UserItem) {
+    setUsers((current) =>
+      current.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+    );
   }
 
   async function handleToggleStatus(userId: string) {
@@ -69,9 +80,43 @@ export function UsersTable({
     }
   }
 
+  async function handleDeleteUser(user: UserItem) {
+    const confirmed = window.confirm(
+      `Tem certeza que deseja excluir o usuário "${user.name}"?\n\nEssa ação não poderá ser desfeita.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setLoadingId(user.id);
+
+    try {
+      const response = await fetch(`/api/studio/users/${user.id}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Erro ao excluir usuário.");
+        return;
+      }
+
+      setUsers((current) => current.filter((item) => item.id !== user.id));
+    } catch {
+      alert("Erro ao conectar com o servidor.");
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
   return (
     <div className="space-y-6">
-      <CreateUserForm onCreated={handleCreated} />
+      <CreateUserForm
+        onCreated={handleCreated}
+        currentUserRole={currentUserRole}
+      />
 
       <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
@@ -110,58 +155,99 @@ export function UsersTable({
                 </th>
               </tr>
             </thead>
+
             <tbody>
-              {users.map((user) => (
-                <tr key={user.id} className="bg-zinc-50">
-                  <td className="rounded-l-xl px-3 py-3 text-sm font-medium text-zinc-900">
-                    {user.name}
-                    {user.id === currentUserId ? (
-                      <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">
-                        Você
-                      </span>
-                    ) : null}
-                  </td>
+              {users.map((user) => {
+                const isSelf = user.id === currentUserId;
+                const isMasterUser = user.role === "MASTER";
+                const canEdit =
+                  loadingId !== user.id &&
+                  !(isMasterUser && currentUserRole !== "MASTER");
 
-                  <td className="px-3 py-3 text-sm text-zinc-700">
-                    {user.email}
-                  </td>
+                const canToggle =
+                  loadingId !== user.id &&
+                  !isSelf &&
+                  !(isMasterUser && currentUserRole !== "MASTER");
 
-                  <td className="px-3 py-3 text-sm text-zinc-700">
-                    {roleLabel(user.role)}
-                  </td>
+                const canDelete =
+                  currentUserRole === "MASTER" &&
+                  !isSelf &&
+                  !isMasterUser;
 
-                  <td className="px-3 py-3 text-sm">
-                    {user.isActive ? (
-                      <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
-                        Ativo
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700">
-                        Inativo
-                      </span>
-                    )}
-                  </td>
+                return (
+                  <tr key={user.id} className="bg-zinc-50">
+                    <td className="rounded-l-xl px-3 py-3 text-sm font-medium text-zinc-900">
+                      {user.name}
+                      {isSelf ? (
+                        <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">
+                          Você
+                        </span>
+                      ) : null}
+                    </td>
 
-                  <td className="px-3 py-3 text-sm text-zinc-700">
-                    {formatDate(user.createdAt)}
-                  </td>
+                    <td className="px-3 py-3 text-sm text-zinc-700">
+                      {user.email}
+                    </td>
 
-                  <td className="rounded-r-xl px-3 py-3 text-right">
-                    <button
-                      type="button"
-                      onClick={() => handleToggleStatus(user.id)}
-                      disabled={loadingId === user.id || user.id === currentUserId}
-                      className="rounded-xl border border-zinc-300 px-3 py-2 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {loadingId === user.id
-                        ? "Processando..."
-                        : user.isActive
-                        ? "Desativar"
-                        : "Ativar"}
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    <td className="px-3 py-3 text-sm text-zinc-700">
+                      {roleLabel(user.role)}
+                    </td>
+
+                    <td className="px-3 py-3 text-sm">
+                      {user.isActive ? (
+                        <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                          Ativo
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700">
+                          Inativo
+                        </span>
+                      )}
+                    </td>
+
+                    <td className="px-3 py-3 text-sm text-zinc-700">
+                      {formatDate(user.createdAt)}
+                    </td>
+
+                    <td className="rounded-r-xl px-3 py-3 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setEditingUser(user)}
+                          disabled={!canEdit}
+                          className="rounded-xl border border-zinc-300 px-3 py-2 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          Editar
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleToggleStatus(user.id)}
+                          disabled={!canToggle}
+                          className="rounded-xl border border-zinc-300 px-3 py-2 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {loadingId === user.id
+                            ? "Processando..."
+                            : user.isActive
+                            ? "Desativar"
+                            : "Ativar"}
+                        </button>
+
+                        {canDelete ? (
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteUser(user)}
+                            disabled={loadingId === user.id}
+                            className="rounded-xl border border-red-300 px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            {loadingId === user.id ? "Excluindo..." : "Excluir"}
+                          </button>
+                        ) : null}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
 
               {users.length === 0 ? (
                 <tr>
@@ -177,6 +263,15 @@ export function UsersTable({
           </table>
         </div>
       </div>
+
+      <EditUserModal
+        user={editingUser}
+        currentUserId={currentUserId}
+        currentUserRole={currentUserRole}
+        isOpen={!!editingUser}
+        onClose={() => setEditingUser(null)}
+        onSaved={handleSaved}
+      />
     </div>
   );
 }

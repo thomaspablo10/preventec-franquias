@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { requireStudioSession } from "@/lib/permissions";
 import { StudioSidebar } from "@/components/studio/sidebar";
+import { StudioSessionGuard } from "@/components/studio/session-guard";
 
 export default async function StudioProtectedLayout({
   children,
@@ -11,6 +12,8 @@ export default async function StudioProtectedLayout({
 
   return (
     <div className="min-h-screen bg-zinc-50 p-4 md:p-6">
+      <StudioSessionGuard />
+
       <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:flex-row">
         <StudioSidebar role={session.role} />
         <div className="flex-1">{children}</div>

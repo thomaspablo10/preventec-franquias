@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { StudioHeader } from "@/components/studio/header";
 import { PostsTable } from "@/components/studio/posts-table";
 import { requireStudioRole } from "@/lib/permissions";
@@ -53,9 +56,15 @@ export default async function StudioPostsPage() {
     slug: post.slug,
     status: post.status,
     category: post.category,
+    subcategory: post.subcategory,
     createdAt: post.createdAt.toISOString(),
     updatedAt: post.updatedAt.toISOString(),
-    unreadMessages: post.status === "PUBLISHED" && session.role !== "ADMIN" ? 0 : post.messages.length,
+    unreadMessages:
+      post.status === "PUBLISHED" &&
+      session.role !== "ADMIN" &&
+      session.role !== "MASTER"
+        ? 0
+        : post.messages.length,
     creator: post.creator,
     reviewer: post.reviewer,
   }));

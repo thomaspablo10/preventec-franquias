@@ -3,17 +3,26 @@ import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
-const allowedRoles = ["ADMIN", "EDITOR", "REVIEWER"] as const;
+const allRoles = ["MASTER", "ADMIN", "EDITOR", "REVIEWER"] as const;
+const adminRoles = ["ADMIN", "EDITOR", "REVIEWER"] as const;
 
 export async function GET() {
   try {
     const session = await getSession();
 
-    if (!session || session.role !== "ADMIN") {
+    if (!session || !["MASTER", "ADMIN"].includes(session.role)) {
       return NextResponse.json({ error: "Acesso negado." }, { status: 403 });
     }
 
     const users = await prisma.user.findMany({
+      where:
+        session.role === "MASTER"
+          ? {}
+          : {
+              role: {
+                not: "MASTER",
+              },
+            },
       orderBy: {
         createdAt: "desc",
       },
@@ -28,7 +37,13 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ users });
+    return NextResponse.json({
+      users: users.map((user) => ({
+        ...user,
+        createdAt: user.createdAt.toISOString(),
+        updatedAt: user.updatedAt.toISOString(),
+      })),
+    });
   } catch (error) {
     console.error("Erro ao listar usuários:", error);
     return NextResponse.json(
@@ -42,7 +57,7 @@ export async function POST(req: Request) {
   try {
     const session = await getSession();
 
-    if (!session || session.role !== "ADMIN") {
+    if (!session || !["MASTER", "ADMIN"].includes(session.role)) {
       return NextResponse.json({ error: "Acesso negado." }, { status: 403 });
     }
 
@@ -60,9 +75,11 @@ export async function POST(req: Request) {
       );
     }
 
+    const allowedRoles = session.role === "MASTER" ? allRoles : adminRoles;
+
     if (!allowedRoles.includes(role)) {
       return NextResponse.json(
-        { error: "Perfil inválido." },
+        { error: "Perfil inválido para seu nível de acesso." },
         { status: 400 }
       );
     }
@@ -102,7 +119,11 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: true,
-        user,
+        user: {
+          ...user,
+          createdAt: user.createdAt.toISOString(),
+          updatedAt: user.updatedAt.toISOString(),
+        },
       },
       { status: 201 }
     );
