@@ -5,9 +5,9 @@ import crypto from "crypto";
 
 const STORAGE_DIR = path.join(process.cwd(), "storage", "blog");
 
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
-const MAX_WIDTH = 1600;
-const MAX_HEIGHT = 1600;
+const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20MB
+const MAX_WIDTH = 2000;
+const MAX_HEIGHT = 2000;
 const OUTPUT_QUALITY = 82;
 
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
