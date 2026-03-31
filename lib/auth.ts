@@ -42,6 +42,7 @@ export async function setSessionCookie(token: string) {
     secure: isProduction(),
     sameSite: "lax",
     path: "/",
+    maxAge: 60 * 60 * 4,
   });
 }
 
