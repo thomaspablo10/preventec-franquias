@@ -9,12 +9,12 @@ if (!secretValue) {
 }
 
 const secret = new TextEncoder().encode(secretValue);
-const INACTIVITY_LIMIT_SECONDS = 60 * 5;
+const INACTIVITY_LIMIT_SECONDS = 60 * 60 * 4;
 
 type SessionPayload = {
   userId: string;
   email: string;
-  role: "ADMIN" | "EDITOR" | "REVIEWER";
+  role: "MASTER" | "ADMIN" | "EDITOR" | "REVIEWER";
   name: string;
   lastActivity: number;
   iat?: number;
@@ -35,7 +35,7 @@ async function signSessionToken(payload: SessionPayload) {
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("5m")
+    .setExpirationTime("4h")
     .sign(secret);
 }
 
@@ -113,6 +113,7 @@ export async function middleware(request: NextRequest) {
       secure: isProduction(),
       sameSite: "lax",
       path: "/",
+      maxAge: 60 * 60 * 4,
     });
 
     return response;
