@@ -11,12 +11,15 @@ export default async function StudioProtectedLayout({
   const session = await requireStudioSession();
 
   return (
-    <div className="min-h-screen bg-zinc-50 p-4 md:p-6">
+    <div className="min-h-screen bg-[#f4f8fb]">
       <StudioSessionGuard />
 
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:flex-row">
+      <div className="relative min-h-screen">
         <StudioSidebar role={session.role} />
-        <div className="flex-1">{children}</div>
+
+        <main className="min-h-screen w-full px-4 py-4 md:px-6 md:py-6 lg:px-8">
+          <div className="mx-auto max-w-[1600px]">{children}</div>
+        </main>
       </div>
     </div>
   );

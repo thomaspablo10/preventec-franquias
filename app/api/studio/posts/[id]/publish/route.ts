@@ -16,7 +16,7 @@ export async function POST(req: Request, context: RouteContext) {
       return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
     }
 
-    if (!["ADMIN", "REVIEWER"].includes(session.role)) {
+    if (!["MASTER", "ADMIN", "REVIEWER"].includes(session.role)) {
       return NextResponse.json({ error: "Acesso negado." }, { status: 403 });
     }
 

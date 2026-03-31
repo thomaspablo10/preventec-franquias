@@ -14,7 +14,7 @@ export async function GET(_req: Request, context: RouteContext) {
   try {
     const { filename } = await context.params;
 
-    if (!/^blog-\d+\.webp$/i.test(filename)) {
+    if (!/^blog-[a-zA-Z0-9-]+\.webp$/i.test(filename)) {
       return new NextResponse("Arquivo inválido.", { status: 400 });
     }
 

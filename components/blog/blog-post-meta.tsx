@@ -20,15 +20,15 @@ export function BlogPostMeta({
 
   return (
     <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600">
-      <div className="flex items-start gap-3">
+      <div className="flex items-center gap-3">
         {authorAvatarUrl ? (
           <img
             src={authorAvatarUrl}
             alt={authorLabel}
-            className="mt-0.5 h-10 w-10 rounded-full object-cover"
+            className="h-12 w-12 rounded-full border border-slate-200 object-cover shadow-sm"
           />
         ) : (
-          <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-sm font-bold text-slate-600">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-slate-200 text-sm font-bold text-slate-600 shadow-sm">
             {authorInitial}
           </div>
         )}

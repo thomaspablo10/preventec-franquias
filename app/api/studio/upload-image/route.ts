@@ -10,7 +10,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
     }
 
-    if (!["ADMIN", "EDITOR", "REVIEWER"].includes(session.role)) {
+    if (!["MASTER", "ADMIN", "EDITOR", "REVIEWER"].includes(session.role)) {
       return NextResponse.json({ error: "Acesso negado." }, { status: 403 });
     }
 

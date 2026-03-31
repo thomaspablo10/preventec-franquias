@@ -1,6 +1,7 @@
 import path from "path";
 import { promises as fs } from "fs";
 import sharp from "sharp";
+import crypto from "crypto";
 
 const STORAGE_DIR = path.join(process.cwd(), "storage", "blog");
 
@@ -50,28 +51,9 @@ async function ensureStorageDir() {
   await fs.mkdir(STORAGE_DIR, { recursive: true });
 }
 
-async function generateSequentialFilename() {
-  await ensureStorageDir();
-
-  const files = await fs.readdir(STORAGE_DIR);
-  const blogFiles = files.filter((file) => /^blog-\d+\.webp$/i.test(file));
-
-  let maxNumber = 0;
-
-  for (const file of blogFiles) {
-    const match = file.match(/^blog-(\d+)\.webp$/i);
-    if (!match) continue;
-
-    const number = Number(match[1]);
-    if (number > maxNumber) {
-      maxNumber = number;
-    }
-  }
-
-  const nextNumber = maxNumber + 1;
-  const padded = String(nextNumber).padStart(2, "0");
-
-  return `blog-${padded}.webp`;
+function generateUniqueFilename() {
+  const random = crypto.randomUUID().replace(/-/g, "");
+  return `blog-${Date.now()}-${random}.webp`;
 }
 
 export async function processAndSaveImage(file: File) {
@@ -97,7 +79,9 @@ export async function processAndSaveImage(file: File) {
     throw new Error("Não foi possível identificar as dimensões da imagem.");
   }
 
-  const filename = await generateSequentialFilename();
+  await ensureStorageDir();
+
+  const filename = generateUniqueFilename();
   const outputPath = path.join(STORAGE_DIR, filename);
 
   await image

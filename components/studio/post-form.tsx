@@ -43,19 +43,9 @@ type PostFormProps = {
   authorRole?: string;
 };
 
-function getStatusOptions(role: StudioRole, isPublished?: boolean) {
+function getFormStatusOptions(isPublished?: boolean) {
   if (isPublished) {
     return [{ value: "PUBLISHED", label: "Publicado" }];
-  }
-
-  if (role === "MASTER" || role === "ADMIN") {
-    return [
-      { value: "DRAFT", label: "Rascunho" },
-      { value: "IN_REVIEW", label: "Enviar para revisão" },
-      { value: "APPROVED", label: "Aprovado" },
-      { value: "REJECTED", label: "Recusado" },
-      { value: "CHANGES_REQUESTED", label: "Pedir ajustes" },
-    ];
   }
 
   return [
@@ -96,8 +86,9 @@ export function PostForm({
   const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [imagePreviewVersion, setImagePreviewVersion] = useState(Date.now());
 
-  const statusOptions = getStatusOptions(role, isPublished);
+  const statusOptions = getFormStatusOptions(isPublished);
   const categoryOptions = getCategoryOptions();
   const subcategoryOptions = getSubcategoryOptions(category as never);
   const fieldsDisabled = isPublished && !isMaster;
@@ -117,6 +108,15 @@ export function PostForm({
   const selectedSubcategoryLabel = useMemo(() => {
     return getPostSubcategoryLabel(subcategory as never);
   }, [subcategory]);
+
+  const imagePreviewUrl = useMemo(() => {
+    if (mediaType !== "IMAGE" || !mediaUrl) {
+      return "";
+    }
+
+    const separator = mediaUrl.includes("?") ? "&" : "?";
+    return `${mediaUrl}${separator}v=${imagePreviewVersion}`;
+  }, [mediaType, mediaUrl, imagePreviewVersion]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -170,6 +170,8 @@ export function PostForm({
   function clearMedia() {
     setMediaType("");
     setMediaUrl("");
+    setImagePreviewVersion(Date.now());
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -197,10 +199,25 @@ export function PostForm({
 
       setMediaType("IMAGE");
       setMediaUrl(data.url);
+      setImagePreviewVersion(Date.now());
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch {
       setError("Erro ao enviar imagem.");
     } finally {
       setUploadingImage(false);
+    }
+  }
+
+  function handleMediaTypeChange(nextValue: PostMediaType | "") {
+    setMediaType(nextValue);
+    setMediaUrl("");
+    setImagePreviewVersion(Date.now());
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   }
 
@@ -265,53 +282,20 @@ export function PostForm({
 
             <div>
               <label className="mb-2 block text-sm font-medium text-zinc-700">
-                Conteúdo
+                Tipo de mídia
               </label>
-              <TiptapEditor
-                value={content}
-                onChange={setContent}
+              <select
+                value={mediaType}
+                onChange={(event) =>
+                  handleMediaTypeChange(event.target.value as PostMediaType | "")
+                }
                 disabled={fieldsDisabled || loading}
-              />
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-zinc-700">
-                  Tipo de mídia
-                </label>
-                <select
-                  value={mediaType}
-                  onChange={(event) => {
-                    const nextValue = event.target.value as PostMediaType | "";
-                    setMediaType(nextValue);
-                    setMediaUrl("");
-                  }}
-                  disabled={fieldsDisabled || loading}
-                  className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500 disabled:bg-zinc-100"
-                >
-                  <option value="">Sem mídia</option>
-                  <option value="IMAGE">Imagem</option>
-                  <option value="YOUTUBE">Vídeo</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-zinc-700">
-                  Status
-                </label>
-                <select
-                  value={status}
-                  onChange={(event) => setStatus(event.target.value as PostStatus)}
-                  disabled={fieldsDisabled || loading}
-                  className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500 disabled:bg-zinc-100"
-                >
-                  {statusOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500 disabled:bg-zinc-100"
+              >
+                <option value="">Sem mídia</option>
+                <option value="IMAGE">Imagem</option>
+                <option value="YOUTUBE">Vídeo</option>
+              </select>
             </div>
 
             {mediaType === "IMAGE" ? (
@@ -346,13 +330,24 @@ export function PostForm({
                   ) : null}
                 </div>
 
+                <p className="mt-2 text-xs text-zinc-500">
+                  A imagem será comprimida e salva no storage do blog.
+                </p>
+
                 {uploadingImage ? (
                   <p className="mt-2 text-sm text-zinc-500">Enviando imagem...</p>
                 ) : null}
 
-                {mediaUrl ? (
+                {error ? (
+                  <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {error}
+                  </div>
+                ) : null}
+
+                {imagePreviewUrl ? (
                   <img
-                    src={mediaUrl}
+                    key={imagePreviewUrl}
+                    src={imagePreviewUrl}
                     alt="Prévia da imagem"
                     className="mt-4 max-h-72 rounded-2xl border border-zinc-200 object-cover"
                   />
@@ -370,7 +365,7 @@ export function PostForm({
                   onChange={(event) => setMediaUrl(event.target.value)}
                   disabled={fieldsDisabled || loading}
                   className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500 disabled:bg-zinc-100"
-                  placeholder="Cole a URL do YouTube, Instagram, Facebook ou TikTok convertida pelo editor"
+                  placeholder="Cole a URL do YouTube"
                 />
 
                 {mediaUrl ? (
@@ -384,11 +379,22 @@ export function PostForm({
                 ) : null}
               </div>
             ) : null}
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-zinc-700">
+                Conteúdo
+              </label>
+              <TiptapEditor
+                value={content}
+                onChange={setContent}
+                disabled={fieldsDisabled || loading}
+              />
+            </div>
           </div>
         </div>
 
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-3">
             <div>
               <p className="text-sm font-medium text-zinc-700">Autor exibido</p>
               <p className="mt-1 text-sm text-zinc-900">{authorName || "Autor"}</p>
@@ -402,13 +408,25 @@ export function PostForm({
               <p className="mt-1 text-sm text-zinc-900">{selectedCategoryLabel}</p>
               <p className="text-xs text-zinc-500">{selectedSubcategoryLabel}</p>
             </div>
-          </div>
 
-          {error ? (
-            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              {error}
+            <div>
+              <label className="mb-2 block text-sm font-medium text-zinc-700">
+                Status
+              </label>
+              <select
+                value={status}
+                onChange={(event) => setStatus(event.target.value as PostStatus)}
+                disabled={fieldsDisabled || loading}
+                className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500 disabled:bg-zinc-100"
+              >
+                {statusOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
-          ) : null}
+          </div>
 
           {fieldsDisabled ? (
             <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
