@@ -14,7 +14,6 @@ const navLinks = [
   { href: "/modalidades", label: "Modalidades" },
   { href: "/como-funciona", label: "Como Funciona" },
   { href: "/blog", label: "Blog" },
-  { href: "/contato", label: "Contato" },
 ];
 
 export function Navbar() {
@@ -90,7 +89,7 @@ export function Navbar() {
               </Link>
             </Button>
             <Button asChild size="sm" className="bg-[#d42b2b] text-white border border-transparent hover:bg-white hover:text-[#b01e1e] hover:border-[#b01e1e]">
-              <Link href="/contato">Quero ser Franqueado</Link>
+              <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeY3eCgRwrn1Hv1qpb4K63TXTDn7ealLrUqpQcivgnu0qHQQA/viewform?usp=publish-editor">Quero ser Franqueado</Link>
             </Button>
           </div>
 
@@ -138,7 +137,7 @@ export function Navbar() {
               </Link>
               </Button>
               <Button asChild size="sm" className="bg-[#d42b2b] text-white border border-transparent hover:bg-white hover:text-[#b01e1e] hover:border-[#b01e1e]">
-                <Link href="/contato">Quero ser Franqueado</Link>
+                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeY3eCgRwrn1Hv1qpb4K63TXTDn7ealLrUqpQcivgnu0qHQQA/viewform?usp=publish-editor">Quero ser Franqueado</Link>
               </Button>
             </div>
           </nav>

@@ -153,7 +153,7 @@ export default function ModalidadesPage() {
 
                 <div className="mt-8 flex flex-col sm:flex-row gap-3">
                   <Button asChild>
-                    <Link href="/contato">
+                    <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeY3eCgRwrn1Hv1qpb4K63TXTDn7ealLrUqpQcivgnu0qHQQA/viewform?usp=publish-editor">
                       Tenho interesse nesta modalidade
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
@@ -176,7 +176,7 @@ export default function ModalidadesPage() {
             Nossa equipe de consultores pode ajudá-lo a identificar a melhor opção com base no perfil do seu mercado local e no seu investimento disponível.
           </p>
           <Button asChild size="lg">
-            <Link href="/contato">Falar com um consultor</Link>
+            <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeY3eCgRwrn1Hv1qpb4K63TXTDn7ealLrUqpQcivgnu0qHQQA/viewform?usp=publish-editor">Falar com um consultor</Link>
           </Button>
         </div>
       </section>

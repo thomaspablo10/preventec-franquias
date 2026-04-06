@@ -26,7 +26,7 @@ Este projeto é uma aplicação full-stack Next.js que fornece:
     /modalidades         # Modalidades de franchising
     /como-funciona       # Como funciona
     /blog                # Blog
-    /contato             # Contato
+    https://docs.google.com/forms/d/e/1FAIpQLSeY3eCgRwrn1Hv1qpb4K63TXTDn7ealLrUqpQcivgnu0qHQQA/viewform?usp=publish-editor             # Contato
   /(portal)              # Rotas protegidas (franqueado)
     /portal              # Dashboard
     /portal/perfil       # Perfil do franqueado

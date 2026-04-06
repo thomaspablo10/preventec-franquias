@@ -20,7 +20,7 @@ export function CtaSection() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button asChild size="lg" className="bg-[#d42b2b] hover:bg-[#b01e1e] text-white h-14 px-8 text-base shadow-lg">
-                <Link href="/contato">
+                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeY3eCgRwrn1Hv1qpb4K63TXTDn7ealLrUqpQcivgnu0qHQQA/viewform?usp=publish-editor">
                   Solicitar informações
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>

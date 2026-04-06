@@ -114,7 +114,7 @@ export default function ComoFuncionaPage() {
           <div className="mt-16 text-center">
             <p className="text-muted-foreground mb-6">Pronto para começar sua jornada?</p>
             <Button asChild size="lg">
-              <Link href="/contato">
+              <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeY3eCgRwrn1Hv1qpb4K63TXTDn7ealLrUqpQcivgnu0qHQQA/viewform?usp=publish-editor">
                 Iniciar meu cadastro
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>

@@ -69,7 +69,7 @@ export default function SobrePage() {
                 segurança do trabalho para a região Norte do Mato Grosso e estado do Pará, mas não para por aí muitas novidades serão divulgadas em breve. 
               </p>
               <Button asChild>
-                <Link href="/contato">
+                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeY3eCgRwrn1Hv1qpb4K63TXTDn7ealLrUqpQcivgnu0qHQQA/viewform?usp=publish-editor">
                   Fale com nossa equipe
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>

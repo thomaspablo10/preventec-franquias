@@ -47,7 +47,7 @@ export function HeroSection() {
               size="lg"
               className="bg-[#d42b2b] hover:bg-[#b01e1e] text-white text-base h-14 px-8 shadow-lg"
             >
-              <Link href="/contato">
+              <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeY3eCgRwrn1Hv1qpb4K63TXTDn7ealLrUqpQcivgnu0qHQQA/viewform?usp=publish-editor">
                 Quero ser franqueado
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
