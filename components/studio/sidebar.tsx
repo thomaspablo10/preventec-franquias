@@ -12,6 +12,7 @@ import {
   UserCircle2,
   Menu,
   X,
+  Mailbox,
 } from "lucide-react";
 
 type StudioSidebarProps = {
@@ -52,6 +53,12 @@ export function StudioSidebar({ role }: StudioSidebarProps) {
       href: "/studio/users",
       label: "Usuários",
       icon: Users,
+      visible: role === "MASTER" || role === "ADMIN",
+    },
+    {
+      href: "/studio/convites",
+      label: "Convites",
+      icon: Mailbox,
       visible: role === "MASTER" || role === "ADMIN",
     },
     {

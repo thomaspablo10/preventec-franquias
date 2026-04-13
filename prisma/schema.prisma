@@ -443,3 +443,40 @@ model PostMessage {
   @@index([senderId])
   @@index([readAt])
 }
+
+model InvitationEvent {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  hostName     String?
+  description  String?  @db.Text
+  eventDate    DateTime
+  locationName String
+  address      String
+  mapsUrl      String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  submissions  InvitationSubmission[]
+
+  @@index([createdAt])
+  @@index([isActive])
+}
+
+model InvitationSubmission {
+  id            String   @id @default(cuid())
+  eventId       String
+  name          String
+  phone         String
+  company       String
+  companionName String?
+  deviceToken   String
+  createdAt     DateTime @default(now())
+
+  event InvitationEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([eventId])
+  @@unique([eventId, deviceToken])
+}
