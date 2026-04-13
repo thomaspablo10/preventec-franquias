@@ -143,21 +143,6 @@ export function InvitationEventForm() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-[#16324f]">Anfitrião</label>
-          <input
-            value={form.hostName}
-            onChange={(e) =>
-              setForm((current) => ({
-                ...current,
-                hostName: e.target.value,
-              }))
-            }
-            className="h-12 w-full rounded-2xl border border-[#d8e7f5] px-4 outline-none focus:border-[#4169E1]"
-            placeholder="Ex.: Dra Gislene Andrea Negrão Cristóvão"
-          />
-        </div>
-
-        <div>
           <label className="mb-2 block text-sm font-medium text-[#16324f]">Data e horário</label>
           <input
             type="datetime-local"
