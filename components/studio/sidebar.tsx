@@ -101,7 +101,7 @@ export function StudioSidebar({ role }: StudioSidebarProps) {
             <div className="flex items-center gap-4">
               <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-sm">
                 <Image
-                  src="/images/logo-square.png"
+                  src="/images/logo.png"
                   alt="Logo Preventec"
                   width={56}
                   height={56}

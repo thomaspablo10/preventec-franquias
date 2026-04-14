@@ -44,7 +44,7 @@ export async function POST(request: Request) {
         title: data.title,
         hostName: data.hostName || null,
         description: data.description || null,
-        eventDate: new Date(data.eventDate),
+        eventDate: new Date(`${data.eventDate}:00-04:00`),
         locationName: data.locationName,
         address: data.address,
         mapsUrl: data.mapsUrl || null,

@@ -54,7 +54,7 @@ export function StudioLoginForm() {
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="mb-5 flex items-center justify-center rounded-[24px] bg-transparent">
             <Image
-              src="/images/logo-square.png"
+              src="/images/logo.png"
               alt="Logo Preventec"
               width={214}
               height={214}

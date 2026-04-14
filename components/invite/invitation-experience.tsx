@@ -362,6 +362,7 @@ export function InvitationExperience({ event }: { event: EventData }) {
     return new Intl.DateTimeFormat("pt-BR", {
       day: "2-digit",
       month: "long",
+      timeZone: "America/Cuiaba",
     }).format(new Date(event.eventDate));
   }, [event.eventDate]);
 
@@ -369,6 +370,7 @@ export function InvitationExperience({ event }: { event: EventData }) {
     return new Intl.DateTimeFormat("pt-BR", {
       hour: "2-digit",
       minute: "2-digit",
+      timeZone: "America/Cuiaba",
     }).format(new Date(event.eventDate));
   }, [event.eventDate]);
 
@@ -625,6 +627,26 @@ export function InvitationExperience({ event }: { event: EventData }) {
         .event-location strong {
           color: #c8920e; display: block; margin-bottom: 2px;
           font-size: clamp(11.5px, 3vw, 13px);
+        }
+        .event-location-link {
+          text-decoration: none;
+          color: inherit;
+          display: block;
+          transition: opacity .18s ease, transform .18s ease;
+        }
+
+        .event-location-link:hover {
+          opacity: 0.82;
+        }
+
+        .event-location-hint {
+          display: block;
+          margin-top: 6px;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #b6860d;
         }
 
         .form-section {
@@ -890,13 +912,10 @@ export function InvitationExperience({ event }: { event: EventData }) {
                       href={event.mapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{
-                        textDecoration: "none",
-                        color: "inherit",
-                        display: "block",
-                      }}
+                      className="event-location-link"
                     >
-                      {event.address}
+                      <span>{event.address}</span>
+                      <span className="event-location-hint">📍 Toque para abrir no mapa</span>
                     </a>
                   ) : (
                     <span>{event.address}</span>

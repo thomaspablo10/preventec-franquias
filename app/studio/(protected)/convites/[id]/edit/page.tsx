@@ -39,9 +39,17 @@ export default async function StudioEditarConvitePage({ params }: PageProps) {
             title: event.title,
             hostName: event.hostName ?? "",
             description: event.description ?? "",
-            eventDate: new Date(event.eventDate.getTime() - event.eventDate.getTimezoneOffset() * 60000)
-              .toISOString()
-              .slice(0, 16),
+            eventDate: new Intl.DateTimeFormat("sv-SE", {
+              timeZone: "America/Cuiaba",
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })
+              .format(event.eventDate)
+              .replace(" ", "T"),
             locationName: event.locationName,
             address: event.address,
             mapsUrl: event.mapsUrl ?? "",
