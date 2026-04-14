@@ -8,6 +8,7 @@ function formatDate(date: Date) {
   return new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "short",
     timeStyle: "short",
+    timeZone: "America/Cuiaba",
   }).format(date);
 }
 
