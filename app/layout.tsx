@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./globals.css";
+import { GoogleTagManager } from '@next/third-parties/google'
 
 const inter = Inter({
   subsets: ["latin"],
@@ -51,6 +52,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
+        <GoogleTagManager gtmId="GTM-W2F5RR52" />
+
         {children}
       </body>
     </html>
