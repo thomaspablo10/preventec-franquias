@@ -10,7 +10,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2 mb-4">
               <img
                 src="/images/logo-white.png"
-                alt="Preventec Franquias"
+                alt="Preventec® Franquias"
               />
             </Link>
             <p className="text-white/70 text-sm leading-relaxed mb-6">
@@ -66,10 +66,10 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <Phone className="w-4 h-4 text-white/60 mt-0.5 flex-shrink-0" />
                 <a
-                  href="tel:+556635311590"
+                  href="tel:+5566992605476"
                   className="text-white/70 text-sm hover:text-white transition"
                 >
-                  (66) 3531-1590
+                  (66) 99260-5476
                 </a>
               </li>
               <li className="flex items-start gap-3">
@@ -95,7 +95,7 @@ export function Footer() {
             </ul>
             <div className="flex items-center justify-center gap-3 mt-4">
               <a
-                href="https://wa.me/5566992025805"
+                href="https://wa.me/5566992605476"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" 
@@ -104,7 +104,7 @@ export function Footer() {
                 <i className="bi bi-whatsapp text-base"></i>
               </a>
               <a 
-                href="https://www.instagram.com/preventecsinop" 
+                href="https://www.instagram.com/preventecfranquias/" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" 
@@ -113,7 +113,7 @@ export function Footer() {
                 <Instagram className="w-4 h-4" />
               </a>
               <a 
-                href="https://www.facebook.com/preventecsinop" 
+                href="https://www.facebook.com/preventecfranquias/" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" 
@@ -127,7 +127,7 @@ export function Footer() {
 
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-white/50 text-sm">
-            © {new Date().getFullYear()} Preventec Franquias. Todos os direitos reservados.
+            © {new Date().getFullYear()} Preventec® Franquias. Todos os direitos reservados.
           </p>
         </div>
       </div>

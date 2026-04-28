@@ -40,7 +40,7 @@ export function AboutPreviewSection() {
               Uma rede construída sobre expertise e confiança
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              A Preventec Franquias nasceu da experiência acumulada de mais de {`${experienceYears}`} anos no setor de Medicina e Segurança do Trabalho. Fundada em 1998, desenvolvemos um modelo de franquia robusto que permite empreendedores de todo o Brasil oferecer serviços de alta qualidade com processos padronizados.
+              A Preventec® Franquias nasceu da experiência acumulada de mais de {`${experienceYears}`} anos no setor de Medicina e Segurança do Trabalho. Fundada em 1998, desenvolvemos um modelo de franquia robusto que permite empreendedores de todo o Brasil oferecer serviços de alta qualidade com processos padronizados.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-8">
               Nossa rede atende empresas de todos os portes, de startups a grandes corporações, cumprindo todas as exigências legais e promovendo ambientes de trabalho mais seguros e saudáveis.

@@ -27,7 +27,7 @@ export default function SobrePage() {
             Quem somos
           </h1>
           <p className="mt-4 text-white/70 max-w-2xl mx-auto leading-relaxed text-lg">
-            Conheça a história, os valores e a visão por trás da Preventec Franquias.
+            Conheça a história, os valores e a visão por trás da Preventec® Franquias.
           </p>
         </div>
       </section>

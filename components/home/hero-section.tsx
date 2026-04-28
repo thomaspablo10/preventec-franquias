@@ -3,6 +3,8 @@ import Image from "next/image";
 import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const experienceYears = new Date().getFullYear() - 1998
+
 export function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -58,7 +60,7 @@ export function HeroSection() {
               variant="outline"
               className="border-white/50 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm text-base h-14 px-8"
             >
-              <a href="https://wa.me/5566992025805" target="_blank" rel="noopener noreferrer">
+              <a href="https://wa.me/5566992605476" target="_blank" rel="noopener noreferrer">
                 <Phone className="w-5 h-5 mr-2" />
                 Falar com consultor
               </a>
@@ -66,10 +68,11 @@ export function HeroSection() {
           </div>
 
           {/* Stats */}
+          {/* Números na página inicial */}
           {/*<div className="mt-16 grid grid-cols-3 gap-6 max-w-sm">
             {[
               { value: "50+", label: "Unidades ativas" },
-              { value: "15+", label: "Anos de mercado" },
+              { value: `${experienceYears}+`, label: "Anos de mercado" },
               { value: "98%", label: "Satisfação" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">

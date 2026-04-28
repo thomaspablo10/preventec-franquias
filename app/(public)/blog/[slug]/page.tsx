@@ -32,7 +32,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${post.title} | Blog Preventec Franquias`,
+    title: `${post.title} | Blog Preventec® Franquias`,
     description: post.excerpt || post.title,
   };
 }

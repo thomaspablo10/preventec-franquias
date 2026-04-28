@@ -46,7 +46,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center flex-shrink-0">
             <Image
               src="/images/logo.png"
-              alt="Preventec Franquias"
+              alt="Preventec® Franquias"
               width={140}
               height={56}
               className="h-12 w-auto object-contain"

@@ -107,7 +107,7 @@ export function InvitationEventForm() {
               }))
             }
             className="h-12 w-full rounded-2xl border border-[#d8e7f5] px-4 outline-none focus:border-[#4169E1]"
-            placeholder="Ex.: Lançamento Preventec Franquias"
+            placeholder="Ex.: Lançamento Preventec® Franquias"
             required
           />
         </div>
